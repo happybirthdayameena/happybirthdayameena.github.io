@@ -4,222 +4,210 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Happy Birthday, Ameena ✨</title>
-  <meta name="description" content="A little surprise, made with love. — Rahul" />
-  <meta name="theme-color" content="#0a0a0f" />
-
-  <!-- Social share preview -->
+  <meta name="description" content="A little surprise, made with love." />
+  <meta name="theme-color" content="#08070c" />
   <meta property="og:title" content="Ameena, someone made you a surprise ✨" />
   <meta property="og:description" content="Tap to open your birthday surprise 🎂" />
   <meta property="og:type" content="website" />
-
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Three.js for the 3D name reveal (lazy-used) -->
   <script type="importmap">
-  {
-    "imports": {
+  { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
       "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-    }
-  }
+  } }
   </script>
 </head>
 <body>
-  <!-- Background layers -->
-  <div class="bg" aria-hidden="true">
-    <div class="bg__glow bg__glow--1"></div>
-    <div class="bg__glow bg__glow--2"></div>
-    <div class="bg__grain"></div>
-  </div>
-
-  <!-- Full-screen confetti / particles -->
+  <div class="bg" aria-hidden="true"></div>
   <canvas id="fx" class="fx" aria-hidden="true"></canvas>
 
-  <!-- Audio toggle (always available) -->
   <button id="audioBtn" class="audio-btn" aria-label="Toggle sound" title="Sound on/off">
-    <span class="audio-btn__on">🔊</span>
-    <span class="audio-btn__off">🔇</span>
+    <span class="audio-btn__on">🔊</span><span class="audio-btn__off">🔇</span>
   </button>
 
-  <!-- Progress dots -->
   <div id="progress" class="progress" aria-hidden="true"></div>
 
-  <!-- ============================ GATE ============================ -->
+  <!-- ===================== GATE ===================== -->
   <div id="gate" class="gate">
     <div class="gate__inner">
       <div class="gate__gift" id="gateGift">
         <div class="giftbox">
-          <div class="giftbox__lid"></div>
-          <div class="giftbox__box"></div>
-          <div class="giftbox__ribbon-v"></div>
-          <div class="giftbox__bow"></div>
+          <div class="giftbox__lid"></div><div class="giftbox__box"></div>
+          <div class="giftbox__ribbon-v"></div><div class="giftbox__bow"></div>
         </div>
       </div>
-      <p class="gate__eyebrow">for a very special someone</p>
-      <h1 class="gate__title">Ameena Ma'am…</h1>
-      <p class="gate__sub">kisi ne aapke liye ek chhota sa surprise banaya hai 🎁</p>
-      <button id="openBtn" class="btn btn--big">
-        <span>Tap to open</span> <span class="btn__ico">🎀</span>
-      </button>
-      <p class="gate__hint">(headphones / sound on karlein — zyada mazaa aayega 🎧)</p>
+      <p class="gate__eyebrow">a little surprise, just for you</p>
+      <h1 class="gate__title">Ameena…</h1>
+      <p class="gate__sub">someone made something special for you 🎁</p>
+      <button id="openBtn" class="btn btn--big"><span>Tap to open</span> <span class="btn__ico">🎀</span></button>
+      <p class="gate__hint">🎧 turn your sound on — it makes it better</p>
     </div>
   </div>
 
-  <!-- ============================ STAGE ============================ -->
+  <!-- ===================== STAGE ===================== -->
   <main id="stage" class="stage" aria-live="polite">
 
-    <!-- CH 1 — Countdown & date reveal -->
+    <!-- CH1 — countdown + reveal -->
     <section class="chapter" data-ch="0" id="ch-countdown">
-      <div class="countdown" id="countdown">
-        <div class="countdown__num" id="cdNum">3</div>
+      <div class="countdown" id="countdown"><div class="countdown__num" id="cdNum">3</div></div>
+
+      <div class="reveal-stage" id="revealStage" hidden>
+        <video id="introVideo" class="intro-video" playsinline muted preload="auto">
+          <source src="assets/video-intro.mp4" type="video/mp4" />
+        </video>
       </div>
+
       <div class="datewrap" id="dateReveal" hidden>
         <div class="date-line date-line--day"><span>22</span></div>
         <div class="date-line date-line--month"><span>September</span></div>
         <div class="date-line date-line--year"><span>2026</span></div>
         <div class="date-hb" id="dateHB">Happy Birthday</div>
+        <div class="date-name" id="dateName">Ameena</div>
       </div>
-      <video id="introVideo" class="intro-video" playsinline muted preload="auto" hidden>
-        <source src="assets/video-intro.mp4" type="video/mp4" />
-      </video>
-      <button class="btn next-btn" data-next hidden id="cdNext">Aur bhi bahut kuch hai <span class="btn__ico">→</span></button>
+
+      <button class="btn next-btn" data-next hidden id="cdNext">there's more <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 2 — Name balloon game -->
+    <!-- CH2 — name balloon game -->
     <section class="chapter" data-ch="1" id="ch-name">
-      <p class="kicker">step 1</p>
-      <h2 class="chapter__title">Pehle apna naam <em>unlock</em> karein</h2>
-      <p class="chapter__hint">Har <b>balloon</b> ko tap karke phodein 🎈</p>
+      <h2 class="chapter__title" id="nameHead">22 September is <em>Ameena's</em> Day</h2>
+      <p class="chapter__hint" id="nameHint">Tap the balloons 🎈</p>
       <div class="namebar" id="nameBar" aria-hidden="true"></div>
       <div class="balloons" id="balloons"></div>
       <div class="name3d-wrap" id="name3dWrap" hidden>
+        <div class="crown" id="crown" aria-hidden="true">
+          <span class="crown__b">🎈</span><span class="crown__c">🎂</span><span class="crown__b">🎈</span>
+        </div>
         <div id="name3d" class="name3d"></div>
-        <p class="name3d__cap">yeh naam hi kaafi hai ✨</p>
+        <p class="name3d__cap">the star of today ✨</p>
       </div>
-      <button class="btn next-btn" data-next hidden id="nameNext">Continue <span class="btn__ico">→</span></button>
+      <button class="btn next-btn" data-next hidden id="nameNext">next <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 3 — The artist -->
+    <!-- CH3 — the artist -->
     <section class="chapter" data-ch="2" id="ch-art">
       <p class="kicker">the artist</p>
-      <h2 class="chapter__title">Aap ek <em>fankaar</em> hain 🎨</h2>
+      <h2 class="chapter__title">You are a true <em>artist</em> 🎨</h2>
       <div class="gallery">
         <figure class="art"><div class="art__frame"><img src="assets/art-living.jpg" alt="Ameena's pencil sketch of a living room" loading="lazy" /><span class="art__shine"></span></div></figure>
         <figure class="art art--tilt"><div class="art__frame"><img src="assets/art-church.jpg" alt="Ameena's pencil sketch of a cathedral" loading="lazy" /><span class="art__shine"></span></div></figure>
       </div>
-      <p class="chapter__body">Yeh haath jo pencil uthata hai, kamaal kar deta hai.<br/>In lakeeron mein jaan hai — bilkul aap ki tarah.<br/><span class="soft">Main hamesha kehta hoon: aap art mein fantastic hain. Yeh hamesha meri memories mein rahengi.</span></p>
-      <button class="btn next-btn" data-next>Aage <span class="btn__ico">→</span></button>
+      <p class="chapter__body">These hands create pure magic.<br/>Every line you draw has life in it — just like you.<br/><span class="soft">You are truly gifted, and these will stay in my memories forever.</span></p>
+      <button class="btn next-btn" data-next>keep going <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 4 — The gym champion -->
+    <!-- CH4 — the champion -->
     <section class="chapter" data-ch="3" id="ch-gym">
       <p class="kicker">the fighter</p>
-      <h2 class="chapter__title">Aur ek <em>champion</em> bhi 💪</h2>
+      <h2 class="chapter__title">And a <em>champion</em> too 💪</h2>
       <div class="badges">
-        <div class="badge"><div class="badge__ico">🏅</div><div class="badge__t">SFT</div><div class="badge__s">pass ✓</div></div>
+        <div class="badge"><div class="badge__ico">🏅</div><div class="badge__t">SFT</div><div class="badge__s">passed ✓</div></div>
         <div class="badge"><div class="badge__ico">📘</div><div class="badge__t">CPT</div><div class="badge__s">international</div></div>
-        <div class="badge"><div class="badge__ico">🔥</div><div class="badge__t">700+</div><div class="badge__s">pages, din-raat</div></div>
+        <div class="badge"><div class="badge__ico">🔥</div><div class="badge__t">700+</div><div class="badge__s">pages, day & night</div></div>
       </div>
-      <p class="chapter__body">Ek certified trainer banne ka safar aasaan nahi hota.<br/>Aap sirf trainer nahi ban rahin —<br/><span class="soft">aap logon ki zindagi behtar banane wali hain.</span></p>
-      <button class="btn next-btn" data-next>Aage <span class="btn__ico">→</span></button>
+      <p class="chapter__body">Becoming a certified trainer is never easy.<br/>You are not just becoming a trainer —<br/><span class="soft">you are going to change people's lives.</span></p>
+      <button class="btn next-btn" data-next>there's more <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 5 — She built her dreams -->
+    <!-- CH5 — self made -->
     <section class="chapter" data-ch="4" id="ch-dreams">
       <p class="kicker">self-made</p>
-      <h2 class="chapter__title">Aapne apne <em>sapne</em> khud banaye</h2>
+      <h2 class="chapter__title">You built it all <em>yourself</em></h2>
       <ul class="dreams">
-        <li><span>🏡</span> apna ghar</li>
-        <li><span>🚗</span> apni gari</li>
-        <li><span>🕊️</span> apni azadi</li>
+        <li><span>🏡</span> your own home</li>
+        <li><span>🕊️</span> your own freedom</li>
+        <li><span>✨</span> your own dreams</li>
+        <li><span>🌸</span> a brand new life</li>
+        <li><span>💪</span> and strong from within</li>
       </ul>
-      <p class="chapter__body">Jo socha tha, woh sach kar dikhaya — apne dum par.<br/><span class="soft">Bahut kam log yeh kar paate hain. Aap un mein se ek hain.</span></p>
-      <button class="btn next-btn" data-next>Aage <span class="btn__ico">→</span></button>
+      <p class="chapter__body soft">P.S. You fall sick so often only because you're this pretty —<br/>someone's clearly giving you the evil eye. Go ward it off! 🧿😄</p>
+      <button class="btn next-btn" data-next>next <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 6 — Numbers of a life -->
+    <!-- CH6 — numbers -->
     <section class="chapter" data-ch="5" id="ch-stats">
       <p class="kicker">a whole life</p>
-      <h2 class="chapter__title">38 saal… ek poori <em>duniya</em></h2>
+      <h2 class="chapter__title">38 years… a whole <em>world</em></h2>
       <div class="stats">
-        <div class="stat"><div class="stat__n" data-count="38">0</div><div class="stat__l">saal</div></div>
-        <div class="stat"><div class="stat__n" data-count="456">0</div><div class="stat__l">mahine</div></div>
-        <div class="stat"><div class="stat__n" data-count="1983">0</div><div class="stat__l">hafte</div></div>
-        <div class="stat"><div class="stat__n" data-count="13879">0</div><div class="stat__l">din</div></div>
-        <div class="stat stat--wide"><div class="stat__n" data-count="1500000000" data-suffix="+">0</div><div class="stat__l">dhadkanein ❤️</div></div>
+        <div class="stat"><div class="stat__n" data-count="38">0</div><div class="stat__l">years</div></div>
+        <div class="stat"><div class="stat__n" data-count="456">0</div><div class="stat__l">months</div></div>
+        <div class="stat"><div class="stat__n" data-count="1983">0</div><div class="stat__l">weeks</div></div>
+        <div class="stat"><div class="stat__n" data-count="13879">0</div><div class="stat__l">days</div></div>
+        <div class="stat stat--wide"><div class="stat__n" data-count="1500000000" data-suffix="+">0</div><div class="stat__l">heartbeats ❤️</div></div>
       </div>
-      <p class="chapter__body soft">…aur har ek lamha duniya ko thoda behtar banata gaya.</p>
-      <button class="btn next-btn" data-next>Aage <span class="btn__ico">→</span></button>
+      <p class="chapter__body soft">…and every single one made the world a little better.</p>
+      <button class="btn next-btn" data-next>almost there <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 7 — Her thoughtfulness (gift) -->
+    <!-- CH7 — the gift -->
     <section class="chapter" data-ch="6" id="ch-gift">
-      <p class="kicker">the kindest friend</p>
-      <h2 class="chapter__title">Aur ek dost jo <em>yaad</em> rakhti hai ❤️</h2>
+      <p class="kicker">the kindest heart</p>
+      <h2 class="chapter__title">Someone who always <em>remembers</em> ❤️</h2>
       <div class="gifts">
         <figure class="giftimg"><img src="assets/gift-wrapped.jpg" alt="A wrapped gift" loading="lazy" /></figure>
         <figure class="giftimg"><img src="assets/gift-box.jpg" alt="A leather wallet and keychain gift" loading="lazy" /></figure>
         <figure class="giftimg"><img src="assets/wallet.jpg" alt="The wallet" loading="lazy" /></figure>
       </div>
-      <p class="chapter__body">Ek tohfa jispe mera naam likha hai — <b>RAHUL</b>.<br/>Yeh cheez nahi, yeh <em>soch</em> hai.<br/><span class="soft">Aisi dost milna kismat ki baat hai. (Aur haan… woh Pepsi wali shaam bhi yaad hai 😄)</span></p>
-      <button class="btn next-btn" data-next>Ab asli surprise… <span class="btn__ico">→</span></button>
+      <p class="chapter__body">A gift with my name on it — <b>RAHUL</b>.<br/>This isn't a thing… it's a thought.<br/><span class="soft">Finding a friend like you is pure luck. (And yes — I still remember that Pepsi evening 😄)</span></p>
+      <button class="btn next-btn" data-next>now… the real surprise <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 8 — THE WISH (climax) -->
+    <!-- CH8 — the wish -->
     <section class="chapter" data-ch="7" id="ch-wish">
       <div class="wish">
-        <div class="wish__photo" id="wishPhoto">
-          <div class="wish__frame"><img src="assets/ameena.jpg" alt="Ameena" /></div>
-          <div class="wish__spark"></div>
-        </div>
         <h2 class="wish__title">Happy Birthday,<br/><span class="script">Ameena</span></h2>
-        <div class="cake" id="cake" title="tap to blow the candles">
-          <div class="cake__plate"></div>
-          <div class="cake__base"></div>
-          <div class="cake__cream"></div>
-          <div class="cake__candle"><span class="flame" data-flame></span></div>
-          <div class="cake__candle"><span class="flame" data-flame></span></div>
-          <div class="cake__candle"><span class="flame" data-flame></span></div>
+        <div class="cake3d" id="cake3d">
+          <!-- CSS fallback cake (replaced by 3D if available) -->
+          <div class="cake" id="cake">
+            <div class="cake__plate"></div><div class="cake__base"></div><div class="cake__cream"></div>
+            <div class="cake__name">AMEENA</div>
+            <div class="cake__candle"><span class="flame" data-flame></span></div>
+            <div class="cake__candle"><span class="flame" data-flame></span></div>
+            <div class="cake__candle"><span class="flame" data-flame></span></div>
+          </div>
         </div>
-        <p class="cake__hint" id="cakeHint">🎂 candles ko blow karne ke liye tap karein</p>
+        <p class="cake__hint" id="cakeHint">make a wish — tap the cake to blow the candles 🎂</p>
+        <button class="btn btn--ghost mic-btn" id="micBtn" hidden>🎤 or blow into your phone</button>
         <p class="wish__msg" id="wishMsg" hidden>
-          Ameena Ma'am, aap jaisa insaan bahut kam milta hai — mehnati, fankaar, aur dil se sachi.
-          Duniya aapko jitni khushi de, uska double aapko mile. Aapki har muskurahat, har sapna, har lakeer —
-          sab poore hon. <b>Aapka har din golden din ho.</b> 🌟
+          Ameena, people like you are rare — hardworking, gifted, and true at heart.
+          May the world give you happiness, and may it come back to you twice over.
+          May every smile, every dream, and every line you draw come true.
+          <b>May every day of yours be golden.</b> 🌟
         </p>
-        <button class="btn next-btn" data-next hidden id="wishNext">Ek aakhri baat <span class="btn__ico">→</span></button>
+        <button class="btn next-btn" data-next hidden id="wishNext">one last thing <span class="btn__ico">→</span></button>
       </div>
     </section>
 
-    <!-- CH 9 — message + video -->
+    <!-- CH9 — video + message -->
     <section class="chapter" data-ch="8" id="ch-video">
       <p class="kicker">for you</p>
-      <h2 class="chapter__title">Ek chhoti si <em>clip</em> 🎬</h2>
-      <div class="videowrap">
-        <video id="finalVideo" class="final-video" playsinline controls preload="metadata" poster="assets/ameena.jpg">
-          <source src="assets/video-final.mp4" type="video/mp4" />
+      <h2 class="chapter__title">Your day is here 🎬</h2>
+      <div class="reveal-stage" id="videoStage">
+        <video id="monthsVideo" class="intro-video" playsinline muted preload="auto">
+          <source src="assets/video-months.mp4" type="video/mp4" />
         </video>
+        <img id="videoPhoto" class="intro-photo" src="assets/ameena.jpg" alt="Ameena" hidden />
+        <div class="video-hb" id="videoHB" hidden>Happy Birthday<br/><span class="script">Ameena</span></div>
       </div>
       <p class="chapter__body script sign">— Rahul</p>
-      <p class="chapter__body soft small">(jo aapko kabhi Ameena, kabhi Ma'am, aur kabhi sirf "Madam ji" bulata hai 😊)</p>
-      <button class="btn next-btn" data-next>Aakhri page <span class="btn__ico">→</span></button>
+      <p class="chapter__body soft small">(the one who calls you Ameena, Ma'am, and sometimes just "Madam ji" 😊)</p>
+      <button class="btn next-btn" data-next>the last page <span class="btn__ico">→</span></button>
     </section>
 
-    <!-- CH 10 — keep forever -->
+    <!-- CH10 — end -->
     <section class="chapter" data-ch="9" id="ch-end">
       <div class="end">
         <div class="end__cake">🎂</div>
-        <h2 class="chapter__title">Yeh link hamesha aap ka hai</h2>
-        <p class="chapter__body">Jab bhi muskurana ho — ise khol lena.<br/><span class="soft">Yeh kabhi purana nahi hoga. ❤️</span></p>
+        <h2 class="chapter__title">This link is always <em>yours</em></h2>
+        <p class="chapter__body">Whenever you want to smile — just open it.<br/><span class="soft">It will never get old. ❤️</span></p>
         <div class="end__actions">
-          <button class="btn btn--ghost" id="replayBtn">↺ Phir se dekhein</button>
+          <button class="btn btn--ghost" id="replayBtn">↺ Replay</button>
           <button class="btn" id="shareBtn">Share 💌</button>
         </div>
         <p class="end__made">made with ❤️ by <b>Rahul</b> · for <b>Ameena</b> · 22 Sept 2026</p>
