@@ -125,6 +125,7 @@ b{font-weight:600}
   padding-bottom:8%;text-align:center;font-family:var(--font-d);font-weight:900;font-size:1.4rem;line-height:1.1;color:#fff;
   text-shadow:0 3px 16px rgba(0,0,0,.8);background:linear-gradient(transparent 55%,rgba(0,0,0,.55));animation:fadeIn .8s var(--ease)}
 .video-hb .script{font-size:2.8rem;display:block}
+.vhb-date{font-family:var(--font-s);font-weight:500;font-size:.82rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pink-soft);display:block;margin-bottom:.35rem}
 
 .datewrap{display:flex;flex-direction:column;align-items:center;gap:.05rem;margin-top:.4rem}
 .date-line{overflow:hidden}

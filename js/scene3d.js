@@ -11,7 +11,7 @@ export function mountName3D(host, text) {
   return new Promise((resolve, reject) => {
     try {
       const W = Math.min(host.clientWidth || 320, 460);
-      const H = 150;
+      const H = 200;
       const canvas = document.createElement("canvas");
       canvas.style.width = "100%"; canvas.style.maxWidth = W + "px"; canvas.style.height = H + "px";
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -53,7 +53,7 @@ export function mountName3D(host, text) {
         const bb = geo.boundingBox, w = bb.max.x - bb.min.x, h = bb.max.y - bb.min.y, d = bb.max.z - bb.min.z;
         geo.translate(-(bb.min.x + w / 2), -(bb.min.y + h / 2), -(bb.min.z + d / 2));
         const mesh = new THREE.Mesh(geo, mat); group.add(mesh);
-        const s = 3.6 / w; group.scale.setScalar(s);
+        const s = 4.7 / w; group.userData.baseS = s; group.scale.setScalar(s);
 
         // swap CSS-3D for the canvas now that it's ready
         host.innerHTML = ""; host.appendChild(canvas);
@@ -65,8 +65,11 @@ export function mountName3D(host, text) {
           t += 0.016;
           pointer.x += (pointer.tx - pointer.x) * 0.06;
           pointer.y += (pointer.ty - pointer.y) * 0.06;
-          group.rotation.y = Math.sin(t * 0.6) * 0.35 + pointer.x * 0.4;
-          group.rotation.x = -pointer.y * 0.25 + Math.sin(t * 0.4) * 0.05;
+          group.rotation.y = Math.sin(t * 0.8) * 0.55 + pointer.x * 0.5;
+          group.rotation.x = -pointer.y * 0.3 + Math.sin(t * 0.6) * 0.1;
+          group.rotation.z = Math.sin(t * 0.9) * 0.05;
+          group.position.y = Math.sin(t * 1.6) * 0.18;
+          const b = group.userData.baseS || 1; group.scale.setScalar(b * (1 + Math.sin(t * 1.3) * 0.04));
           renderer.render(scene, camera);
         })();
         resolve(true);

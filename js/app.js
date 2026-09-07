@@ -95,18 +95,9 @@ const Sound = (() => {
     return voices.find(v => /en(-|_)?(GB|IN|US)?/i.test(v.lang) && /female|zira|samantha|google uk english female|karen|tessa|aria/i.test(v.name))
         || voices.find(v => /^en/i.test(v.lang)) || voices[0] || null;
   }
-  function narrate(text, { delay = 0 } = {}) {
-    if (muted) return;
-    try {
-      setTimeout(() => {
-        if (muted) return;
-        const u = new SpeechSynthesisUtterance(text);
-        u.rate = 0.96; u.pitch = 1.08; u.volume = 1;
-        const v = pickVoice(); if (v) u.voice = v;
-        speechSynthesis.cancel(); speechSynthesis.speak(u);
-      }, delay);
-    } catch (_) {}
-  }
+  // Robotic text-to-speech removed (sounded unnatural). No-op kept so calls don't break.
+  // To add a REAL voice: drop an audio file and play it here instead.
+  function narrate() { /* intentionally disabled */ }
 
   return { context, unlock, setMuted, isMuted, balloonPop, tick, whoosh, sparkle, chime, cheer, happyBirthday, startMusic, stopMusic, narrate };
 })();
@@ -178,7 +169,7 @@ const onEnter = {}, onLeave = {};
 let cdDone = false;
 onEnter[0] = async () => {
   if (cdDone) return; cdDone = true;
-  const numEl = $("#cdNum"), cd = $("#countdown"), rs = $("#revealStage"), vid = $("#introVideo"), dr = $("#dateReveal");
+  const numEl = $("#cdNum"), cd = $("#countdown"), rs = $("#revealStage"), vid = $("#introVideo");
   await sleep(350);
   for (const n of [3, 2, 1]) { numEl.textContent = n; numEl.classList.remove("pop"); void numEl.offsetWidth; numEl.classList.add("pop"); Sound.tick(); await sleep(850); }
   numEl.textContent = ""; cd.hidden = true;                    // remove the lingering "1"
@@ -187,20 +178,16 @@ onEnter[0] = async () => {
   const reveal = async () => {
     if (revealed) return; revealed = true;
     vid.pause?.();
-    rs.style.transition = "opacity .6s"; rs.style.opacity = "0";
-    await sleep(520); rs.hidden = true;
-    dr.hidden = false;
-    for (const ln of $$(".date-line", dr)) { ln.classList.add("reveal"); Sound.whoosh(); await sleep(600); }
-    $("#dateHB").classList.add("show"); await sleep(350);
-    $("#dateName").classList.add("show"); Sound.cheer();
-    Sound.narrate("Twenty second of September. Happy birthday, Ameena!");
-    FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
+    $("#introPhoto").hidden = false;                            // months clip → Ameena's real photo (#1)
+    await sleep(250);
+    $("#introHB").hidden = false;
+    Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
     await sleep(400); $("#cdNext").hidden = false;
   };
   vid.addEventListener("ended", reveal, { once: true });
   vid.addEventListener("error", reveal, { once: true });
   vid.play?.().catch(() => {});
-  setTimeout(reveal, 7500);                                     // safety: reveal even if video stalls
+  setTimeout(reveal, 6000);                                     // video-months ~5s
 };
 onLeave[0] = () => { $("#introVideo").pause?.(); };
 
@@ -230,7 +217,9 @@ onEnter[1] = () => {
     wrap.appendChild(b);
   });
   async function finishName() {
-    await sleep(450); wrap.style.display = "none"; $("#nameHint").style.display = "none";
+    await sleep(450);
+    wrap.style.display = "none"; $("#nameHint").style.display = "none";
+    $("#nameBar").style.display = "none";                       // remove the middle duplicate name (keep title + big 3D name)
     const n3 = $("#name3dWrap"); n3.hidden = false; buildName3D($("#name3d"), "AMEENA");
     Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.42, 80);
     await sleep(400); $("#nameNext").hidden = false; tryThreeName($("#name3d"));
@@ -322,10 +311,10 @@ function buildName3D(host, text) {
   if (!$("#n3d-css")) {
     const st = document.createElement("style"); st.id = "n3d-css";
     st.textContent = `.n3d-stage{display:flex;gap:.02em;perspective:700px;justify-content:center}
-    .n3d-l{font-family:var(--font-d);font-weight:900;font-size:clamp(2.4rem,15vw,5rem);line-height:1;color:#fff;
-      text-shadow:1px 1px 0 #ff7db4,2px 2px 0 #ff5a9e,3px 3px 0 #ff3f8e,4px 4px 0 #e82e7d,5px 5px 0 #c9256b,6px 6px 14px rgba(0,0,0,.5),0 0 26px rgba(255,45,120,.55);
-      animation:n3dspin 5s ease-in-out infinite, n3dglow 2.4s ease-in-out infinite;animation-delay:calc(var(--i)*.1s)}
-    @keyframes n3dspin{0%,100%{transform:rotateY(-16deg) rotateX(6deg) translateY(0)}50%{transform:rotateY(16deg) rotateX(-4deg) translateY(-6px)}}
+    .n3d-l{font-family:var(--font-d);font-weight:900;font-size:clamp(3rem,19vw,6.2rem);line-height:1;color:#fff;
+      text-shadow:1px 1px 0 #ff7db4,2px 2px 0 #ff5a9e,3px 3px 0 #ff3f8e,4px 4px 0 #e82e7d,6px 6px 0 #c9256b,8px 8px 16px rgba(0,0,0,.5),0 0 30px rgba(255,45,120,.6);
+      animation:n3dspin 4s ease-in-out infinite, n3dglow 2s ease-in-out infinite;animation-delay:calc(var(--i)*.09s)}
+    @keyframes n3dspin{0%,100%{transform:rotateY(-24deg) rotateX(8deg) translateY(0) scale(1)}50%{transform:rotateY(24deg) rotateX(-6deg) translateY(-12px) scale(1.06)}}
     @keyframes n3dglow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,45,120,.4))}50%{filter:drop-shadow(0 0 18px rgba(255,45,120,.85))}}`;
     document.head.appendChild(st);
   }

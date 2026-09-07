@@ -58,20 +58,33 @@ export function mountCake3D(host, name) {
         const a = (i - 1) * 0.55;
         const c = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.7, 12), candleMat);
         c.position.set(a, 1.7, 0); cake.add(c);
-        const fl = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.34, 12), flameMat);
-        fl.position.set(a, 2.15, 0); cake.add(fl); flames.push(fl);
+        const fl = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), flameMat);
+        fl.scale.set(0.9, 1.7, 0.9);                 // rounded teardrop flame (not an arrow)
+        fl.position.set(a, 2.12, 0); cake.add(fl); flames.push(fl);
         const pl = new THREE.PointLight(0xffa64d, 1.1, 6); pl.position.set(a, 2.2, 0.2); cake.add(pl); flameLights.push(pl);
       }
 
       // "AMEENA" text on the cake front
+      // "AMEENA" wrapped ONTO the cake's curved surface (looks written on the cake)
       new FontLoader().load(FONT_URL, (font) => {
         try {
-          const geo = new TextGeometry(name, { font, size: 0.36, height: 0.06, curveSegments: 6, bevelEnabled: false });
-          geo.computeBoundingBox();
-          const w = geo.boundingBox.max.x - geo.boundingBox.min.x;
-          geo.translate(-w / 2, 0, 0);
-          const txt = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xb3123f, roughness: 0.4 }));
-          txt.position.set(0, -0.55, 1.6); cake.add(txt);
+          const txtMat = new THREE.MeshStandardMaterial({ color: 0xff2d78, roughness: 0.35, emissive: 0x3a0016, emissiveIntensity: 0.4 });
+          const R = 1.64, cy = -0.45, gap = 0.07;
+          const items = [...name].map((ch) => {
+            const g = new TextGeometry(ch, { font, size: 0.32, height: 0.04, curveSegments: 6, bevelEnabled: false });
+            g.computeBoundingBox(); const bb = g.boundingBox, w = bb.max.x - bb.min.x;
+            g.translate(-(bb.min.x + w / 2), -(bb.max.y + bb.min.y) / 2, 0);
+            return { g, w };
+          });
+          const total = items.reduce((s, it) => s + it.w + gap, -gap);
+          let acc = -total / 2;
+          items.forEach(({ g, w }) => {
+            const theta = (acc + w / 2) / R;
+            const m = new THREE.Mesh(g, txtMat);
+            m.position.set(Math.sin(theta) * R, cy, Math.cos(theta) * R);
+            m.rotation.y = theta;                       // face outward, flush to the surface
+            cake.add(m); acc += w + gap;
+          });
         } catch (_) {}
       }, undefined, () => {});
 
@@ -98,7 +111,7 @@ export function mountCake3D(host, name) {
         if (!alive) return; requestAnimationFrame(tick);
         t += 0.016;
         cake.rotation.y = Math.sin(t * 0.5) * 0.3;
-        if (!blown) flames.forEach((f, i) => { f.scale.y = 1 + Math.sin(t * 12 + i) * 0.12; f.scale.x = 1 + Math.cos(t * 10 + i) * 0.06; });
+        if (!blown) flames.forEach((f, i) => { const fy = 1.7 + Math.sin(t * 12 + i) * 0.22, fx = 0.9 + Math.cos(t * 10 + i) * 0.05; f.scale.set(fx, fy, fx); });
         smoke.forEach((s) => { s.position.add(s.userData.v); s.material.opacity *= 0.98; s.scale.multiplyScalar(1.01); });
         renderer.render(scene, camera);
       })();

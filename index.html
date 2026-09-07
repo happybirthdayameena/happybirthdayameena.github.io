@@ -42,11 +42,11 @@
           <div class="giftbox__ribbon-v"></div><div class="giftbox__bow"></div>
         </div>
       </div>
-      <p class="gate__eyebrow">a little surprise, just for you</p>
-      <h1 class="gate__title">Ameena…</h1>
-      <p class="gate__sub">someone made something special for you 🎁</p>
+      <p class="gate__eyebrow">for a very special someone</p>
+      <h1 class="gate__title">Ameena Ma'am…</h1>
+      <p class="gate__sub">kisi ne aapke liye ek chhota sa surprise banaya hai 🎁</p>
       <button id="openBtn" class="btn btn--big"><span>Tap to open</span> <span class="btn__ico">🎀</span></button>
-      <p class="gate__hint">🎧 turn your sound on — it makes it better</p>
+      <p class="gate__hint">🎧 headphones / sound on karlein — zyada mazaa aayega</p>
     </div>
   </div>
 
@@ -59,16 +59,10 @@
 
       <div class="reveal-stage" id="revealStage" hidden>
         <video id="introVideo" class="intro-video" playsinline muted preload="auto">
-          <source src="assets/video-intro.mp4" type="video/mp4" />
+          <source src="assets/video-months.mp4" type="video/mp4" />
         </video>
-      </div>
-
-      <div class="datewrap" id="dateReveal" hidden>
-        <div class="date-line date-line--day"><span>22</span></div>
-        <div class="date-line date-line--month"><span>September</span></div>
-        <div class="date-line date-line--year"><span>2026</span></div>
-        <div class="date-hb" id="dateHB">Happy Birthday</div>
-        <div class="date-name" id="dateName">Ameena</div>
+        <img id="introPhoto" class="intro-photo" src="assets/ameena.jpg" alt="Ameena" hidden />
+        <div class="video-hb" id="introHB" hidden><span class="vhb-date">22 September 2026</span>Happy Birthday<span class="script">Ameena</span></div>
       </div>
 
       <button class="btn next-btn" data-next hidden id="cdNext">there's more <span class="btn__ico">→</span></button>
@@ -118,15 +112,14 @@
     <!-- CH5 — self made -->
     <section class="chapter" data-ch="4" id="ch-dreams">
       <p class="kicker">self-made</p>
-      <h2 class="chapter__title">You built it all <em>yourself</em></h2>
+      <h2 class="chapter__title">Aapne apne <em>sapne</em> khud banaye</h2>
       <ul class="dreams">
-        <li><span>🏡</span> your own home</li>
-        <li><span>🕊️</span> your own freedom</li>
-        <li><span>✨</span> your own dreams</li>
-        <li><span>🌸</span> a brand new life</li>
-        <li><span>💪</span> and strong from within</li>
+        <li><span>🕊️</span> apni azadi</li>
+        <li><span>✨</span> apni khwahishein</li>
+        <li><span>🌸</span> apni nayi zindagi</li>
+        <li><span>💪</span> andar se mazboot</li>
       </ul>
-      <p class="chapter__body soft">P.S. You fall sick so often only because you're this pretty —<br/>someone's clearly giving you the evil eye. Go ward it off! 🧿😄</p>
+      <p class="chapter__body soft">Jo socha, woh sach kar dikhaya — apne dam par. 💫<br/><br/>P.S. Aap itni pyaari ho na, isliye tabiyat bhi zyada kharab hoti hai — nazar lag jaati hai! Thodi nazar utaara karein 🧿😄</p>
       <button class="btn next-btn" data-next>next <span class="btn__ico">→</span></button>
     </section>
 
@@ -190,7 +183,7 @@
       <h2 class="chapter__title">Your day is here 🎬</h2>
       <div class="reveal-stage" id="videoStage">
         <video id="monthsVideo" class="intro-video" playsinline muted preload="auto">
-          <source src="assets/video-months.mp4" type="video/mp4" />
+          <source src="assets/video-intro.mp4" type="video/mp4" />
         </video>
         <img id="videoPhoto" class="intro-photo" src="assets/ameena.jpg" alt="Ameena" hidden />
         <div class="video-hb" id="videoHB" hidden>Happy Birthday<br/><span class="script">Ameena</span></div>
@@ -204,10 +197,10 @@
     <section class="chapter" data-ch="9" id="ch-end">
       <div class="end">
         <div class="end__cake">🎂</div>
-        <h2 class="chapter__title">This link is always <em>yours</em></h2>
-        <p class="chapter__body">Whenever you want to smile — just open it.<br/><span class="soft">It will never get old. ❤️</span></p>
+        <h2 class="chapter__title">Yeh link hamesha <em>aap ka</em> hai</h2>
+        <p class="chapter__body">Jab bhi muskurana ho — ise khol lena.<br/><span class="soft">Yeh kabhi purana nahi hoga. ❤️</span></p>
         <div class="end__actions">
-          <button class="btn btn--ghost" id="replayBtn">↺ Replay</button>
+          <button class="btn btn--ghost" id="replayBtn">↺ Phir se dekhein</button>
           <button class="btn" id="shareBtn">Share 💌</button>
         </div>
         <p class="end__made">made with ❤️ by <b>Rahul</b> · for <b>Ameena</b> · 22 Sept 2026</p>
