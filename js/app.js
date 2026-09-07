@@ -187,7 +187,7 @@ onEnter[0] = async () => {
   vid.addEventListener("ended", reveal, { once: true });
   vid.addEventListener("error", reveal, { once: true });
   vid.play?.().catch(() => {});
-  setTimeout(reveal, 6000);                                     // video-months ~5s
+  setTimeout(reveal, 7500);                                     // video-intro (candle/HB) ~6.5s
 };
 onLeave[0] = () => { $("#introVideo").pause?.(); };
 
@@ -211,8 +211,7 @@ onEnter[1] = () => {
       if (b.classList.contains("pop")) return;
       const r = b.getBoundingClientRect(); Sound.balloonPop(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 18);
       b.classList.add("pop");
-      const s = document.createElement("span"); s.textContent = L; bar.appendChild(s); requestAnimationFrame(() => s.classList.add("in"));
-      if (++popped === letters.length) finishName();
+      if (++popped === letters.length) finishName();      // no half-built name bar; go straight to big 3D name
     }, { passive: true });
     wrap.appendChild(b);
   });
@@ -281,7 +280,7 @@ onEnter[8] = () => {
   v.addEventListener("error", showHer, { once: true });
   try { v.currentTime = 0; } catch (_) {}
   v.play?.().catch(() => {});
-  setTimeout(showHer, 6500);
+  setTimeout(showHer, 24000);                                   // video-months (6th) is ~22.6s
 };
 onLeave[8] = () => { $("#monthsVideo").pause?.(); };
 
