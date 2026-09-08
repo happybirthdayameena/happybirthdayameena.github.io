@@ -58,7 +58,7 @@
       <div class="countdown" id="countdown"><div class="countdown__num" id="cdNum">3</div></div>
 
       <div class="media-duo" id="revealStage" hidden>
-        <div class="clip"><video id="introVideo" playsinline loop preload="auto"><source src="assets/video-intro.mp4" type="video/mp4" /></video></div>
+        <div class="clip"><video id="introVideo" playsinline loop preload="auto"><source src="assets/opening.mp4" type="video/mp4" /></video></div>
         <div class="photo">
           <img src="assets/ameena.jpg" alt="Ameena" />
           <div class="video-hb"><span class="vhb-date">22 September 2026</span>Happy Birthday<span class="script">Ameena</span></div>
@@ -178,15 +178,23 @@
     </section>
 
     <!-- CH9 — video + message -->
-    <section class="chapter" data-ch="8" id="ch-video">
+    <!-- CH9a — her photo + singing + balloons -->
+    <section class="chapter" data-ch="8" id="ch-her">
       <p class="kicker">for you</p>
-      <h2 class="chapter__title">Your day is here 🎬</h2>
-      <div class="media-duo">
-        <div class="clip"><video id="monthsVideo" playsinline muted loop preload="auto"><source src="assets/video-months.mp4" type="video/mp4" /></video></div>
-        <div class="photo">
-          <img src="assets/ameena.jpg" alt="Ameena" />
-          <div class="video-hb">Happy Birthday<span class="script">Ameena</span></div>
-        </div>
+      <h2 class="chapter__title">Your day is <em>here</em> 🎂</h2>
+      <div class="bigphoto" id="herPhoto" role="button" tabindex="0" aria-label="tap the photo">
+        <img src="assets/ameena.jpg" alt="Ameena" />
+        <div class="bigphoto__balloons" id="herBalloons" aria-hidden="true"></div>
+        <div class="video-hb">Happy Birthday<span class="script">Ameena</span></div>
+      </div>
+      <p class="tap-hint" id="tapHint" hidden>👆 tap the photo</p>
+    </section>
+
+    <!-- CH9b — final clip -->
+    <section class="chapter" data-ch="9" id="ch-video">
+      <p class="kicker">one more thing 🎬</p>
+      <div class="videowrap">
+        <video id="finaleVideo" class="final-video" playsinline preload="auto"><source src="assets/finale.mp4" type="video/mp4" /></video>
       </div>
       <p class="chapter__body script sign">— Rahul</p>
       <p class="chapter__body soft small">(the one who calls you Ameena, Ma'am, and sometimes just "Madam ji" 😊)</p>
@@ -194,7 +202,7 @@
     </section>
 
     <!-- CH10 — end -->
-    <section class="chapter" data-ch="9" id="ch-end">
+    <section class="chapter" data-ch="10" id="ch-end">
       <div class="end">
         <div class="end__cake">🎂</div>
         <h2 class="chapter__title">Yeh link hamesha <em>aap ka</em> hai</h2>
@@ -210,6 +218,7 @@
   </main>
 
   <audio id="song" src="assets/birthday-song.mp3" preload="auto" playsinline></audio>
+  <audio id="bgm" src="assets/bg-piano.mp3" preload="auto" loop playsinline></audio>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

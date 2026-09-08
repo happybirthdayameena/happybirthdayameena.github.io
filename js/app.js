@@ -149,6 +149,31 @@ const FX = (() => {
   return { burst, rain, add };
 })();
 
+/* ---------------- BACKGROUND PIANO ---------------- */
+const Bgm = (() => {
+  const el = $("#bgm"); let full = 0.34, muted = false, started = false;
+  function start() { if (!el || started) return; started = true; el.volume = full; el.muted = muted; el.play?.().catch(() => {}); }
+  function level(v) { if (el && !muted) el.volume = v; }         // soft on text pages, near-off where clips/voice play
+  function setMuted(m) { muted = m; if (el) el.muted = m; }
+  return { start, level, setMuted };
+})();
+const DUCK_BGM = new Set([0, 7, 8, 9]);                          // pages with their own clip / voice / song
+
+/* floating balloons over the photo (few, gentle) */
+let herBalloonTimer = null;
+function startHerBalloons(cont) {
+  if (!cont) return; stopHerBalloons();
+  const emo = ["🎈", "🎈", "🩷", "🎈", "💗"];
+  herBalloonTimer = setInterval(() => {
+    if (cont.children.length > 4) return;
+    const b = document.createElement("span"); b.className = "bfly"; b.textContent = emo[(Math.random() * emo.length) | 0];
+    b.style.left = (8 + Math.random() * 78) + "%";
+    const dur = 3 + Math.random() * 2; b.style.animationDuration = dur + "s"; b.style.fontSize = (1.3 + Math.random() * 1.1) + "rem";
+    cont.appendChild(b); setTimeout(() => b.remove(), dur * 1000 + 120);
+  }, 950);
+}
+function stopHerBalloons() { if (herBalloonTimer) { clearInterval(herBalloonTimer); herBalloonTimer = null; } const c = $("#herBalloons"); if (c) c.innerHTML = ""; }
+
 /* ---------------- NAVIGATION ---------------- */
 const chapters = $$(".chapter"), progressEl = $("#progress");
 let current = -1, started = false;
@@ -161,24 +186,23 @@ function goTo(i) {
   current = i; chapters[i].classList.add("is-active");
   dots.forEach((d, k) => d.classList.toggle("is-active", k === i));
   onEnter[i]?.();
+  Bgm.level(DUCK_BGM.has(i) ? 0.05 : 0.34);                    // duck piano where a clip/voice plays
 }
 $$("[data-next]").forEach((b) => b.addEventListener("click", () => { Sound.whoosh(); goTo(current + 1); }));
 
 /* ---------------- GATE ---------------- */
 const gate = $("#gate");
 $("#openBtn").addEventListener("click", async () => {
-  Sound.unlock(); Sound.chime(); Sound.startMusic();
+  Sound.unlock(); Sound.chime(); Bgm.start();
   const r = $("#gateGift").getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 44);
   gate.classList.add("is-gone"); progressEl.classList.add("is-on"); started = true;
   await sleep(600); gate.style.display = "none"; goTo(0);
 });
 const audioBtn = $("#audioBtn");
 audioBtn.addEventListener("click", () => {
-  const m = !Sound.isMuted(); Sound.setMuted(m); audioBtn.classList.toggle("is-muted", m);
-  const iv = $("#introVideo"), song = $("#song");
-  if (iv) iv.muted = m;
-  if (song) { song.muted = m; if (m) song.pause?.(); }
-  if (!m) Sound.startMusic();
+  const m = !Sound.isMuted(); Sound.setMuted(m); Bgm.setMuted(m); audioBtn.classList.toggle("is-muted", m);
+  ["#introVideo", "#finaleVideo"].forEach((s) => { const el = $(s); if (el) el.muted = m; });
+  const song = $("#song"); if (song) { song.muted = m; if (m) song.pause?.(); }
 });
 
 /* ---------------- CHAPTER HOOKS ---------------- */
@@ -193,14 +217,13 @@ onEnter[0] = async () => {
   for (const n of [3, 2, 1]) { numEl.textContent = n; numEl.classList.remove("pop"); void numEl.offsetWidth; numEl.classList.add("pop"); Sound.tick(); await sleep(850); }
   numEl.textContent = ""; cd.hidden = true;                    // remove the lingering "1"
   rs.hidden = false;                                           // clip (top) + Ameena photo (#1) shown together
-  Sound.stopMusic();                                           // let the clip's own background music play
-  vid.muted = Sound.isMuted();
+  vid.muted = Sound.isMuted();                                 // opening clip plays its own music
   vid.play?.().catch(() => { vid.muted = true; vid.play?.().catch(() => {}); });
   await sleep(300);
   Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
   await sleep(500); $("#cdNext").hidden = false;
 };
-onLeave[0] = () => { $("#introVideo").pause?.(); Sound.startMusic(); };
+onLeave[0] = () => { $("#introVideo").pause?.(); };
 
 /* CH1 — name balloon game */
 let nameBuilt = false;
@@ -274,32 +297,52 @@ onEnter[7] = () => {
   mic.addEventListener("click", (e) => { e.stopPropagation(); startMicBlow(blow); });
 };
 
-/* CH8 (ch-video) — clip (loops) + Ameena's real photo (#2) together, with the birthday tune */
-let ch9Done = false;
+/* CH9a (ch-her) — her photo (gentle zoom) + floating balloons + your singing voice → tap to continue */
 onEnter[8] = () => {
-  const v = $("#monthsVideo"), song = $("#song");
-  Sound.stopMusic();                                          // the singing voice is the audio here
-  try { v.currentTime = 0; } catch (_) {}
-  v.muted = true; v.play?.().catch(() => {});                 // clip = the visual (months + candles)
+  const song = $("#song"), photo = $("#herPhoto"), hint = $("#tapHint"), bcont = $("#herBalloons");
   if (song) { song.muted = Sound.isMuted(); try { song.currentTime = 0; } catch (_) {} song.play?.().catch(() => {}); }
-  if (!ch9Done) { ch9Done = true; FX.burst(innerWidth / 2, innerHeight * 0.4, 55); }
+  startHerBalloons(bcont);
+  FX.burst(innerWidth / 2, innerHeight * 0.4, 45);
+  const invite = () => { if (hint) hint.hidden = false; };
+  if (song) song.addEventListener("ended", invite, { once: true });
+  setTimeout(invite, 44000);                                   // fallback: show tap cue even if 'ended' never fires
+  if (!photo.dataset.wired) {
+    photo.dataset.wired = "1";
+    photo.addEventListener("click", () => { Sound.whoosh(); goTo(9); }, { passive: true });
+  }
 };
-onLeave[8] = () => { $("#monthsVideo").pause?.(); $("#song")?.pause?.(); Sound.startMusic(); };
+onLeave[8] = () => { $("#song")?.pause?.(); stopHerBalloons(); };
+
+/* CH9b (ch-video) — the personalized final clip, with its own audio */
+onEnter[9] = () => {
+  const v = $("#finaleVideo");
+  try { v.currentTime = 0; } catch (_) {}
+  v.muted = Sound.isMuted();
+  v.play?.().catch(() => { v.muted = true; v.play?.().catch(() => {}); });
+};
+onLeave[9] = () => { $("#finaleVideo").pause?.(); };
 
 /* ---------------- MIC BLOW DETECTION ---------------- */
 async function startMicBlow(cb) {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const ac = Sound.context(); const src = ac.createMediaStreamSource(stream);
-    const an = ac.createAnalyser(); an.fftSize = 512; src.connect(an);
-    const data = new Uint8Array(an.frequencyBinCount); let sustained = 0;
-    $("#cakeHint").textContent = "🎤 now blow…";
+    // turn OFF noise suppression / AGC so the browser doesn't filter the "whoosh" of a blow
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    Sound.unlock(); const ac = Sound.context();
+    const src = ac.createMediaStreamSource(stream);
+    const an = ac.createAnalyser(); an.fftSize = 1024; src.connect(an);
+    const freq = new Uint8Array(an.frequencyBinCount), time = new Uint8Array(an.fftSize);
+    let sustained = 0, done = false;
+    const hint = $("#cakeHint"); if (hint) { hint.style.display = ""; hint.textContent = "🎤 blow now…"; }
     const iv = setInterval(() => {
-      an.getByteFrequencyData(data); let low = 0; for (let i = 0; i < 24; i++) low += data[i]; low /= 24;
-      if (low > 105) { if (++sustained > 3) { clearInterval(iv); stream.getTracks().forEach(t => t.stop()); cb(); } }
+      if (done) return;
+      an.getByteFrequencyData(freq); an.getByteTimeDomainData(time);
+      let sum = 0; for (let i = 0; i < time.length; i++) { const d = (time[i] - 128) / 128; sum += d * d; }
+      const rms = Math.sqrt(sum / time.length);                 // overall loudness
+      let low = 0; for (let i = 0; i < 30; i++) low += freq[i]; low /= 30;   // low-freq (wind) energy
+      if (rms > 0.11 || low > 78) { if (++sustained >= 2) { done = true; clearInterval(iv); stream.getTracks().forEach(t => t.stop()); cb(); } }
       else sustained = Math.max(0, sustained - 1);
-    }, 100);
-    setTimeout(() => { clearInterval(iv); stream.getTracks().forEach(t => t.stop()); }, 15000);
+    }, 90);
+    setTimeout(() => { if (!done) { clearInterval(iv); stream.getTracks().forEach(t => t.stop()); } }, 20000);
   } catch (_) { /* denied — tap still works */ }
 }
 
