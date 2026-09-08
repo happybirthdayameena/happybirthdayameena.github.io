@@ -68,7 +68,7 @@ export function mountName3D(host, text) {
           group.rotation.y = Math.sin(t * 0.8) * 0.55 + pointer.x * 0.5;
           group.rotation.x = -pointer.y * 0.3 + Math.sin(t * 0.6) * 0.1;
           group.rotation.z = Math.sin(t * 0.9) * 0.05;
-          group.position.y = Math.sin(t * 1.6) * 0.18;
+          // no vertical bob here — the whole balloon+name group floats together via CSS, so the string stays tied
           const b = group.userData.baseS || 1; group.scale.setScalar(b * (1 + Math.sin(t * 1.3) * 0.04));
           renderer.render(scene, camera);
         })();
