@@ -15,7 +15,7 @@
   --ease:cubic-bezier(.22,1,.36,1);
   --font-d:"Playfair Display",Georgia,serif;
   --font-s:"Poppins",system-ui,sans-serif;
-  --font-script:"Great Vibes",cursive;
+  --font-script:"Dancing Script","Great Vibes",cursive;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -106,7 +106,7 @@ b{font-weight:600}
 .chapter__body{color:var(--muted);font-size:1rem;line-height:1.6;max-width:30ch}
 .chapter__body.small{font-size:.82rem}
 .soft{color:var(--faint)}
-.script{font-family:var(--font-script);background:var(--grad-ink);-webkit-background-clip:text;background-clip:text;color:transparent}
+.script{font-family:var(--font-script);font-weight:700;background:var(--grad-ink);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sign{font-size:2.4rem;line-height:1.35;margin-top:.3rem;text-align:center;overflow:visible;padding:0 .6em;max-width:none;width:100%}
 
 /* ---- CH1 countdown + reveal ---- */
@@ -145,6 +145,28 @@ b{font-weight:600}
 .bfly{position:absolute;bottom:-12%;font-size:1.8rem;animation:brise linear forwards;will-change:transform,opacity}
 @keyframes brise{0%{transform:translateY(0) rotate(-6deg);opacity:0}18%{opacity:.95}82%{opacity:.95}100%{transform:translateY(-130%) rotate(6deg);opacity:0}}
 .tap-hint{color:var(--pink-soft);font-size:1rem;font-weight:500;animation:blink 1.3s ease-in-out infinite}
+
+/* CH0 — incoming-call: slide to answer */
+.call{display:flex;flex-direction:column;align-items:center;gap:1.1rem;width:100%;max-width:420px}
+.call__top{text-align:center}
+.call__from{font-family:var(--font-d);font-weight:700;font-size:2rem;line-height:1.1}
+.call__sub{color:var(--muted);font-size:.95rem}
+.call__date{display:flex;flex-direction:column;align-items:center;margin:1.2rem 0 .4rem}
+.call__d{font-family:var(--font-s);font-weight:300;font-size:2.2rem;color:var(--muted)}
+.call__m{font-family:var(--font-s);font-weight:700;font-size:2.7rem}
+.call__acts{display:flex;gap:3.4rem;color:var(--muted);font-size:.72rem;margin:.6rem 0 1rem}
+.call__act{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.call__ic{font-size:1.3rem;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.call__track{position:relative;width:min(84vw,320px);height:66px;border-radius:40px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.13);overflow:hidden;touch-action:none;user-select:none}
+.call__knob{position:absolute;top:5px;left:5px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:1.5rem;
+  background:linear-gradient(145deg,#3ddc6d,#22a94c);box-shadow:0 4px 14px rgba(0,0,0,.45);z-index:2;
+  animation:knobnudge 1.5s ease-in-out infinite}
+@keyframes knobnudge{0%,100%{transform:translateX(0)}55%{transform:translateX(12px)}}
+.call__knob.dragging{animation:none}
+.call__hint{position:absolute;inset:0;display:grid;place-items:center;padding-left:46px;color:rgba(255,255,255,.55);font-size:.95rem;
+  animation:hintshim 2s ease-in-out infinite;pointer-events:none}
+@keyframes hintshim{0%,100%{opacity:.35}50%{opacity:.9}}
 
 .datewrap{display:flex;flex-direction:column;align-items:center;gap:.05rem;margin-top:.4rem}
 .date-line{overflow:hidden}

@@ -53,6 +53,7 @@ const Sound = (() => {
   const sparkle = () => { unlock(); const t = ctx.currentTime; [1320, 1760, 2200].forEach((f, i) => note(f, t + i * 0.05, 0.25, { gain: 0.18 })); };
   const chime   = () => { unlock(); const t = ctx.currentTime; [523, 659, 784, 1046].forEach((f, i) => note(f, t + i * 0.09, 0.5, { gain: 0.28 })); };
   const cheer   = () => { unlock(); const t = ctx.currentTime; noise(t, 0.6, { gain: 0.28, hp: 500, lp: 5000 }); [523, 659, 784].forEach((f, i) => note(f, t + i * 0.02, 0.6, { type: "triangle", gain: 0.22 })); sparkle(); };
+  const ring    = () => { unlock(); const t = ctx.currentTime; [659, 831, 988].forEach((f, i) => note(f, t + i * 0.11, 0.42, { type: "sine", gain: 0.3 })); };
 
   // ---- Happy Birthday melody ----
   function happyBirthday() {
@@ -113,7 +114,7 @@ const Sound = (() => {
     } catch (_) {}
   }
 
-  return { context, unlock, setMuted, isMuted, balloonPop, tick, whoosh, sparkle, chime, cheer, happyBirthday, startMusic, stopMusic, narrate };
+  return { context, unlock, setMuted, isMuted, balloonPop, tick, whoosh, sparkle, chime, cheer, ring, happyBirthday, startMusic, stopMusic, narrate };
 })();
 
 /* ---------------- CONFETTI ---------------- */
@@ -157,7 +158,7 @@ const Bgm = (() => {
   function setMuted(m) { muted = m; if (el) el.muted = m; }
   return { start, level, setMuted };
 })();
-const DUCK_BGM = new Set([0, 7, 8, 9]);                          // pages with their own clip / voice / song
+const DUCK_BGM = new Set(["ch-call", "ch-countdown", "ch-wish", "ch-her", "ch-video"]); // pages with their own clip / voice / ring
 
 /* floating balloons over the photo (few, gentle) */
 let herBalloonTimer = null;
@@ -182,11 +183,11 @@ const dots = $$("#progress span");
 function goTo(i) {
   if (i < 0 || i >= chapters.length || i === current) return;
   const prev = current;
-  if (prev >= 0) { chapters[prev].classList.remove("is-active"); onLeave[prev]?.(); }
+  if (prev >= 0) { chapters[prev].classList.remove("is-active"); onLeave[chapters[prev].id]?.(); }
   current = i; chapters[i].classList.add("is-active");
   dots.forEach((d, k) => d.classList.toggle("is-active", k === i));
-  onEnter[i]?.();
-  Bgm.level(DUCK_BGM.has(i) ? 0.05 : 0.34);                    // duck piano where a clip/voice plays
+  onEnter[chapters[i].id]?.();
+  Bgm.level(DUCK_BGM.has(chapters[i].id) ? 0.05 : 0.34);       // duck piano where a clip/voice plays
 }
 $$("[data-next]").forEach((b) => b.addEventListener("click", () => { Sound.whoosh(); goTo(current + 1); }));
 
@@ -208,9 +209,33 @@ audioBtn.addEventListener("click", () => {
 /* ---------------- CHAPTER HOOKS ---------------- */
 const onEnter = {}, onLeave = {};
 
+/* CH0 — incoming call: ring + vibrate, slide the green knob to answer */
+let ringTimer = null;
+function stopRing() { if (ringTimer) { clearInterval(ringTimer); ringTimer = null; } try { navigator.vibrate?.(0); } catch (_) {} }
+onEnter["ch-call"] = () => {
+  const track = $("#callTrack"), knob = $("#callKnob"), hint = $("#callSlideHint");
+  const doRing = () => { if (!Sound.isMuted()) { Sound.ring(); try { navigator.vibrate?.([300, 140, 300]); } catch (_) {} } };
+  doRing(); if (ringTimer) clearInterval(ringTimer); ringTimer = setInterval(doRing, 1900);
+  // reset knob each time we land here
+  knob.style.transition = ""; knob.style.transform = "translateX(0)"; knob.classList.remove("dragging");
+  knob.textContent = "📞"; if (hint) hint.style.opacity = "";
+  if (knob.dataset.wired) return; knob.dataset.wired = "1";
+  let dragging = false, startX = 0, x = 0, max = 0;
+  const px = (e) => (e.clientX ?? e.touches?.[0]?.clientX ?? 0);
+  const setX = (v) => { x = Math.max(0, Math.min(max, v)); knob.style.transform = `translateX(${x}px)`; if (hint) hint.style.opacity = String(Math.max(0, 1 - (max ? x / max : 0) * 1.3)); };
+  const answer = () => { stopRing(); Sound.chime(); knob.textContent = "✅"; setTimeout(() => goTo(current + 1), 300); };
+  const down = (e) => { dragging = true; knob.classList.add("dragging"); max = track.clientWidth - knob.offsetWidth - 10; startX = px(e) - x; };
+  const move = (e) => { if (!dragging) return; setX(px(e) - startX); };
+  const up = () => { if (!dragging) return; dragging = false; knob.classList.remove("dragging"); if (x >= max - 8) answer(); else { knob.style.transition = "transform .25s var(--ease)"; setX(0); setTimeout(() => (knob.style.transition = ""), 280); } };
+  knob.addEventListener("pointerdown", down);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", up);
+};
+onLeave["ch-call"] = () => { stopRing(); };
+
 /* CH0 — countdown → intro video → Ameena photo + date */
 let cdDone = false;
-onEnter[0] = async () => {
+onEnter["ch-countdown"] = async () => {
   if (cdDone) return; cdDone = true;
   const numEl = $("#cdNum"), cd = $("#countdown"), rs = $("#revealStage"), vid = $("#introVideo");
   await sleep(350);
@@ -223,11 +248,11 @@ onEnter[0] = async () => {
   Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
   await sleep(500); $("#cdNext").hidden = false;
 };
-onLeave[0] = () => { $("#introVideo").pause?.(); };
+onLeave["ch-countdown"] = () => { $("#introVideo").pause?.(); };
 
 /* CH1 — name balloon game */
 let nameBuilt = false;
-onEnter[1] = () => {
+onEnter["ch-name"] = () => {
   if (nameBuilt) return; nameBuilt = true;
   Sound.narrate("The twenty second of September is Ameena's day.", { delay: 500 });
   const wrap = $("#balloons"), bar = $("#nameBar");
@@ -263,7 +288,7 @@ onEnter[1] = () => {
 
 /* CH5 — counters */
 let statsDone = false;
-onEnter[5] = () => {
+onEnter["ch-stats"] = () => {
   if (statsDone) return; statsDone = true;
   $$(".stat__n").forEach((el) => {
     const target = +el.dataset.count, suffix = el.dataset.suffix || "", dur = 1600, t0 = performance.now();
@@ -275,7 +300,7 @@ function fmt(n) { if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, "") 
 
 /* CH7 — wish + 3D cake + blow (tap or mic) */
 let cakeReady = false;
-onEnter[7] = () => {
+onEnter["ch-wish"] = () => {
   if (cakeReady) return; cakeReady = true;
   tryThreeCake($("#cake3d"));                         // upgrade to real 3D cake if possible
   const host = $("#cake3d");
@@ -298,7 +323,7 @@ onEnter[7] = () => {
 };
 
 /* CH9a (ch-her) — her photo (gentle zoom) + floating balloons + your singing voice → tap to continue */
-onEnter[8] = () => {
+onEnter["ch-her"] = () => {
   const song = $("#song"), photo = $("#herPhoto"), hint = $("#tapHint"), bcont = $("#herBalloons");
   if (song) { song.muted = Sound.isMuted(); try { song.currentTime = 0; } catch (_) {} song.play?.().catch(() => {}); }
   startHerBalloons(bcont);
@@ -308,40 +333,40 @@ onEnter[8] = () => {
   setTimeout(invite, 44000);                                   // fallback: show tap cue even if 'ended' never fires
   if (!photo.dataset.wired) {
     photo.dataset.wired = "1";
-    photo.addEventListener("click", () => { Sound.whoosh(); goTo(9); }, { passive: true });
+    photo.addEventListener("click", () => { Sound.whoosh(); goTo(current + 1); }, { passive: true });
   }
 };
-onLeave[8] = () => { $("#song")?.pause?.(); stopHerBalloons(); };
+onLeave["ch-her"] = () => { $("#song")?.pause?.(); stopHerBalloons(); };
 
 /* CH9b (ch-video) — the personalized final clip, with its own audio */
-onEnter[9] = () => {
+onEnter["ch-video"] = () => {
   const v = $("#finaleVideo");
   try { v.currentTime = 0; } catch (_) {}
   v.muted = Sound.isMuted();
   v.play?.().catch(() => { v.muted = true; v.play?.().catch(() => {}); });
 };
-onLeave[9] = () => { $("#finaleVideo").pause?.(); };
+onLeave["ch-video"] = () => { $("#finaleVideo").pause?.(); };
 
 /* ---------------- MIC BLOW DETECTION ---------------- */
 async function startMicBlow(cb) {
   try {
-    // turn OFF noise suppression / AGC so the browser doesn't filter the "whoosh" of a blow
+    // noise suppression / AGC OFF so the browser doesn't filter the "whoosh" of a blow
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
     Sound.unlock(); const ac = Sound.context();
     const src = ac.createMediaStreamSource(stream);
     const an = ac.createAnalyser(); an.fftSize = 1024; src.connect(an);
-    const freq = new Uint8Array(an.frequencyBinCount), time = new Uint8Array(an.fftSize);
-    let sustained = 0, done = false;
+    const time = new Uint8Array(an.fftSize);
+    let done = false, frames = 0, baseline = 0, sustained = 0;
     const hint = $("#cakeHint"); if (hint) { hint.style.display = ""; hint.textContent = "🎤 blow now…"; }
+    const rmsNow = () => { an.getByteTimeDomainData(time); let s = 0; for (let i = 0; i < time.length; i++) { const d = (time[i] - 128) / 128; s += d * d; } return Math.sqrt(s / time.length); };
     const iv = setInterval(() => {
       if (done) return;
-      an.getByteFrequencyData(freq); an.getByteTimeDomainData(time);
-      let sum = 0; for (let i = 0; i < time.length; i++) { const d = (time[i] - 128) / 128; sum += d * d; }
-      const rms = Math.sqrt(sum / time.length);                 // overall loudness
-      let low = 0; for (let i = 0; i < 30; i++) low += freq[i]; low /= 30;   // low-freq (wind) energy
-      if (rms > 0.11 || low > 78) { if (++sustained >= 2) { done = true; clearInterval(iv); stream.getTracks().forEach(t => t.stop()); cb(); } }
+      const r = rmsNow();
+      if (frames < 8) { baseline = (baseline * frames + r) / (frames + 1); frames++; return; } // ~640ms ambient calibration
+      const thresh = Math.max(baseline * 2.2, 0.05);            // blow = clearly louder than the room
+      if (r > thresh) { if (++sustained >= 2) { done = true; clearInterval(iv); stream.getTracks().forEach(t => t.stop()); cb(); } }
       else sustained = Math.max(0, sustained - 1);
-    }, 90);
+    }, 80);
     setTimeout(() => { if (!done) { clearInterval(iv); stream.getTracks().forEach(t => t.stop()); } }, 20000);
   } catch (_) { /* denied — tap still works */ }
 }

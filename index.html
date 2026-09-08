@@ -13,7 +13,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 
   <script type="importmap">
@@ -52,6 +52,25 @@
 
   <!-- ===================== STAGE ===================== -->
   <main id="stage" class="stage" aria-live="polite">
+
+    <!-- CH0 — incoming call: slide to answer -->
+    <section class="chapter" id="ch-call">
+      <div class="call">
+        <div class="call__top">
+          <p class="call__from">Birthday 🎂</p>
+          <p class="call__sub">is calling…</p>
+        </div>
+        <div class="call__date"><span class="call__d">22</span><span class="call__m">September</span></div>
+        <div class="call__acts">
+          <div class="call__act"><span class="call__ic">⏰</span>Remind Me</div>
+          <div class="call__act"><span class="call__ic">💬</span>Message</div>
+        </div>
+        <div class="call__track" id="callTrack">
+          <div class="call__knob" id="callKnob">📞</div>
+          <span class="call__hint" id="callSlideHint">slide to answer</span>
+        </div>
+      </div>
+    </section>
 
     <!-- CH1 — countdown + reveal -->
     <section class="chapter" data-ch="0" id="ch-countdown">
