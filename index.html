@@ -57,12 +57,12 @@
     <section class="chapter" data-ch="0" id="ch-countdown">
       <div class="countdown" id="countdown"><div class="countdown__num" id="cdNum">3</div></div>
 
-      <div class="reveal-stage" id="revealStage" hidden>
-        <video id="introVideo" class="intro-video" playsinline muted preload="auto">
-          <source src="assets/video-intro.mp4" type="video/mp4" />
-        </video>
-        <img id="introPhoto" class="intro-photo" src="assets/ameena.jpg" alt="Ameena" hidden />
-        <div class="video-hb" id="introHB" hidden><span class="vhb-date">22 September 2026</span>Happy Birthday<span class="script">Ameena</span></div>
+      <div class="media-duo" id="revealStage" hidden>
+        <div class="clip"><video id="introVideo" playsinline muted loop preload="auto"><source src="assets/video-intro.mp4" type="video/mp4" /></video></div>
+        <div class="photo">
+          <img src="assets/ameena.jpg" alt="Ameena" />
+          <div class="video-hb"><span class="vhb-date">22 September 2026</span>Happy Birthday<span class="script">Ameena</span></div>
+        </div>
       </div>
 
       <button class="btn next-btn" data-next hidden id="cdNext">there's more <span class="btn__ico">→</span></button>
@@ -119,7 +119,7 @@
         <li><span>🌸</span> your own new life</li>
         <li><span>💪</span> strong from within</li>
       </ul>
-      <p class="chapter__body soft">What you dreamed, you made real — all on your own. 💫<br/><br/>P.S. You fall sick this often only because you're this pretty — someone keeps giving you the evil eye! Better get it warded off 🧿😄</p>
+      <p class="chapter__body soft">What you dreamed, you made real — all on your own. 💫<br/><br/>P.S. Aap itni pyaari ho na, isliye tabiyat zyada kharab hoti hai — nazar lag jaati hai! Thodi nazar utaara karein 🧿😄</p>
       <button class="btn next-btn" data-next>next <span class="btn__ico">→</span></button>
     </section>
 
@@ -181,12 +181,12 @@
     <section class="chapter" data-ch="8" id="ch-video">
       <p class="kicker">for you</p>
       <h2 class="chapter__title">Your day is here 🎬</h2>
-      <div class="reveal-stage" id="videoStage">
-        <video id="monthsVideo" class="intro-video" playsinline muted preload="auto">
-          <source src="assets/video-months.mp4" type="video/mp4" />
-        </video>
-        <img id="videoPhoto" class="intro-photo" src="assets/ameena.jpg" alt="Ameena" hidden />
-        <div class="video-hb" id="videoHB" hidden>Happy Birthday<br/><span class="script">Ameena</span></div>
+      <div class="media-duo">
+        <div class="clip"><video id="monthsVideo" playsinline muted loop preload="auto"><source src="assets/video-months.mp4" type="video/mp4" /></video></div>
+        <div class="photo">
+          <img src="assets/ameena.jpg" alt="Ameena" />
+          <div class="video-hb">Happy Birthday<span class="script">Ameena</span></div>
+        </div>
       </div>
       <p class="chapter__body script sign">— Rahul</p>
       <p class="chapter__body soft small">(the one who calls you Ameena, Ma'am, and sometimes just "Madam ji" 😊)</p>

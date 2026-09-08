@@ -173,21 +173,11 @@ onEnter[0] = async () => {
   await sleep(350);
   for (const n of [3, 2, 1]) { numEl.textContent = n; numEl.classList.remove("pop"); void numEl.offsetWidth; numEl.classList.add("pop"); Sound.tick(); await sleep(850); }
   numEl.textContent = ""; cd.hidden = true;                    // remove the lingering "1"
-  rs.hidden = false;
-  let revealed = false;
-  const reveal = async () => {
-    if (revealed) return; revealed = true;
-    vid.pause?.();
-    $("#introPhoto").hidden = false;                            // months clip → Ameena's real photo (#1)
-    await sleep(250);
-    $("#introHB").hidden = false;
-    Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
-    await sleep(400); $("#cdNext").hidden = false;
-  };
-  vid.addEventListener("ended", reveal, { once: true });
-  vid.addEventListener("error", reveal, { once: true });
+  rs.hidden = false;                                           // clip (top) + Ameena photo (#1) shown together
   vid.play?.().catch(() => {});
-  setTimeout(reveal, 7500);                                     // video-intro (candle/HB) ~6.5s
+  await sleep(300);
+  Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
+  await sleep(500); $("#cdNext").hidden = false;
 };
 onLeave[0] = () => { $("#introVideo").pause?.(); };
 
@@ -211,7 +201,9 @@ onEnter[1] = () => {
       if (b.classList.contains("pop")) return;
       const r = b.getBoundingClientRect(); Sound.balloonPop(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 18);
       b.classList.add("pop");
-      if (++popped === letters.length) finishName();      // no half-built name bar; go straight to big 3D name
+      const s = document.createElement("span"); s.textContent = L; bar.appendChild(s);
+      requestAnimationFrame(() => s.classList.add("in"));   // letter appears cleanly at top as you tap
+      if (++popped === letters.length) finishName();
     }, { passive: true });
     wrap.appendChild(b);
   });
@@ -263,24 +255,13 @@ onEnter[7] = () => {
   mic.addEventListener("click", (e) => { e.stopPropagation(); startMicBlow(blow); });
 };
 
-/* CH8 (ch-video) — months clip → Ameena's real photo + Happy Birthday */
-let vidDone = false;
+/* CH8 (ch-video) — clip (loops) + Ameena's real photo (#2) together, with the birthday tune */
+let ch9Done = false;
 onEnter[8] = () => {
-  const v = $("#monthsVideo"), photo = $("#videoPhoto"), hb = $("#videoHB");
-  if (vidDone) { v.hidden = true; photo.hidden = false; hb.hidden = false; return; }
-  vidDone = true;
-  let shown = false;
-  const showHer = () => {
-    if (shown) return; shown = true;
-    v.pause?.(); photo.hidden = false; hb.hidden = false;
-    Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 60);
-    Sound.narrate("Happy birthday, Ameena. This day is yours.");
-  };
-  v.addEventListener("ended", showHer, { once: true });
-  v.addEventListener("error", showHer, { once: true });
+  const v = $("#monthsVideo");
   try { v.currentTime = 0; } catch (_) {}
   v.play?.().catch(() => {});
-  setTimeout(showHer, 24000);                                   // video-months (6th) is ~22.6s
+  if (!ch9Done) { ch9Done = true; Sound.happyBirthday(); FX.burst(innerWidth / 2, innerHeight * 0.4, 55); }
 };
 onLeave[8] = () => { $("#monthsVideo").pause?.(); };
 
