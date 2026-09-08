@@ -278,11 +278,12 @@ onEnter["ch-name"] = () => {
   });
   async function finishName() {
     await sleep(450);
-    wrap.style.display = "none"; $("#nameHint").style.display = "none";
-    $("#nameBar").style.display = "none";                       // remove the middle duplicate name (keep title + big 3D name)
-    const n3 = $("#name3dWrap"); n3.hidden = false; buildName3D($("#name3d"), "AMEENA");
+    wrap.style.display = "none"; $("#nameHint").style.display = "none"; $("#nameBar").style.display = "none";
+    const n3 = $("#name3dWrap"); n3.hidden = false;
     Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.42, 80);
-    await sleep(400); $("#nameNext").hidden = false; tryThreeName($("#name3d"));
+    const ok = await tryThreeName($("#name3d"));                // real RED 3D name first
+    if (!ok) buildName3D($("#name3d"), "AMEENA");               // pink CSS only if WebGL is unavailable
+    await sleep(300); $("#nameNext").hidden = false;
   }
 };
 
@@ -302,8 +303,9 @@ function fmt(n) { if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, "") 
 let cakeReady = false;
 onEnter["ch-wish"] = () => {
   if (cakeReady) return; cakeReady = true;
-  tryThreeCake($("#cake3d"));                         // upgrade to real 3D cake if possible
-  const host = $("#cake3d");
+  const host = $("#cake3d"), cssCake = $("#cake");
+  if (cssCake) cssCake.style.display = "none";        // hide the simple fallback cake — show only the real 3D
+  tryThreeCake(host).then((ok) => { if (!ok && cssCake) cssCake.style.display = ""; });
   let done = false;
   const blow = async () => {
     if (done) return; done = true;
@@ -388,8 +390,8 @@ function buildName3D(host, text) {
     document.head.appendChild(st);
   }
 }
-async function tryThreeName(host) { if (REDUCED || innerWidth < 360) return; try { const m = await import("./scene3d.js"); await m.mountName3D(host, "AMEENA"); } catch (_) {} }
-async function tryThreeCake(host) { if (REDUCED) return; try { const m = await import("./cake3d.js"); await m.mountCake3D(host, "AMEENA"); } catch (_) {} }
+async function tryThreeName(host) { if (REDUCED || innerWidth < 360) return false; try { const m = await import("./scene3d.js"); await m.mountName3D(host, "AMEENA"); return true; } catch (_) { return false; } }
+async function tryThreeCake(host) { if (REDUCED) return false; try { const m = await import("./cake3d.js"); await m.mountCake3D(host, "AMEENA"); return true; } catch (_) { return false; } }
 
 /* ---------------- END actions ---------------- */
 $("#replayBtn").addEventListener("click", () => { Sound.unlock(); location.reload(); });

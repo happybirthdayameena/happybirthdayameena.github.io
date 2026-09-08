@@ -116,6 +116,13 @@ export function mountCake3D(host, name) {
         renderer.render(scene, camera);
       })();
 
+      // if WebGL drops (some in-app browsers) → stop and show the CSS cake instead of a blank/white box
+      canvas.addEventListener("webglcontextlost", (e) => {
+        e.preventDefault(); alive = false;
+        const css = host.querySelector("#cake"); if (css) css.style.display = "";
+        try { canvas.style.display = "none"; } catch (_) {}
+      }, false);
+
       resolve(true);
     } catch (e) { reject(e); }
   });

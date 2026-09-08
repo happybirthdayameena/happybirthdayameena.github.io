@@ -18,6 +18,7 @@
   --font-script:"Dancing Script","Great Vibes",cursive;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}   /* make sure hidden buttons/wraps stay hidden until JS reveals them */
 html,body{height:100%}
 body{font-family:var(--font-s);background:var(--bg);color:var(--ink);overflow:hidden;
   position:fixed;inset:0;-webkit-font-smoothing:antialiased}
@@ -148,6 +149,11 @@ b{font-weight:600}
 
 /* CH0 — incoming-call: slide to answer */
 .call{display:flex;flex-direction:column;align-items:center;gap:1.1rem;width:100%;max-width:420px}
+.call__avatar{position:relative;width:98px;height:98px;border-radius:50%;overflow:hidden;margin:0 auto 6px;
+  border:2px solid rgba(255,255,255,.55);background:linear-gradient(145deg,#3a2540,#22141f);display:grid;place-items:center;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);animation:floaty 3.4s ease-in-out infinite}
+.call__avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.call__avatar .ph{font-size:2.3rem}
 .call__top{text-align:center}
 .call__from{font-family:var(--font-d);font-weight:700;font-size:2rem;line-height:1.1}
 .call__sub{color:var(--muted);font-size:.95rem}
@@ -204,9 +210,10 @@ b{font-weight:600}
 @keyframes bpulse{0%,100%{scale:1}50%{scale:1.09}}
 
 .name3d-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem}
-.crown{display:flex;gap:.5rem;align-items:flex-end;font-size:1.8rem;animation:floaty 3s ease-in-out infinite}
-.crown__c{font-size:2.2rem}
-.name3d__cap{font-family:var(--font-script);font-size:1.7rem;color:var(--pink-soft)}
+.namefly{display:flex;gap:2.6rem;justify-content:center;margin-bottom:2px;animation:floaty 3.2s ease-in-out infinite}
+.namefly span{position:relative;font-size:2rem;line-height:1}
+.namefly span::after{content:"";position:absolute;top:92%;left:50%;width:1.5px;height:44px;background:linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,0))}
+.name3d__cap{font-family:var(--font-script);font-weight:700;font-size:1.9rem;color:var(--pink-soft);margin-top:2px}
 
 /* ---- CH3 gallery ---- */
 .gallery{display:flex;gap:14px;overflow-x:auto;max-width:100%;padding:6px 4px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
@@ -250,8 +257,8 @@ b{font-weight:600}
 .wish__title{font-family:var(--font-d);font-weight:900;font-size:clamp(1.7rem,7.5vw,2.6rem);line-height:1.05}
 .wish__title .script{font-size:clamp(3rem,17vw,6rem);display:block;margin-top:.05em}
 .wish__msg{color:var(--muted);font-size:1rem;line-height:1.6;max-width:32ch;background:var(--card);border:1px solid var(--card-bd);border-radius:16px;padding:16px 18px}
-.cake3d{width:min(80vw,320px);height:min(46vh,280px);display:grid;place-items:center}
-.cake3d canvas{width:100%!important;height:100%!important;display:block}
+.cake3d{width:min(80vw,320px);height:min(46vh,280px);display:grid;place-items:center;background:transparent}
+.cake3d canvas,.name3d canvas{width:100%!important;height:100%!important;display:block;background:transparent}
 
 /* CSS fallback cake */
 .cake{position:relative;width:160px;height:130px;cursor:pointer}
