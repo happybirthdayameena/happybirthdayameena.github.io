@@ -95,9 +95,23 @@ const Sound = (() => {
     return voices.find(v => /en(-|_)?(GB|IN|US)?/i.test(v.lang) && /female|zira|samantha|google uk english female|karen|tessa|aria/i.test(v.name))
         || voices.find(v => /^en/i.test(v.lang)) || voices[0] || null;
   }
-  // Robotic text-to-speech removed (sounded unnatural). No-op kept so calls don't break.
-  // To add a REAL voice: drop an audio file and play it here instead.
-  function narrate() { /* intentionally disabled */ }
+  // Spoken line via the device's most natural available voice (used only for one short line).
+  function narrate(text, { delay = 300 } = {}) {
+    if (muted || !text) return;
+    try {
+      const speak = () => {
+        if (muted) return;
+        const vs = speechSynthesis.getVoices();
+        const pick = vs.find(v => /en-?(GB|IN|AU)/i.test(v.lang) && /female|zira|hazel|heera|libby|sonia|susan|aria|neerja/i.test(v.name))
+                  || vs.find(v => /female|samantha|zira|google.*female/i.test(v.name))
+                  || vs.find(v => /^en/i.test(v.lang)) || vs[0];
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.9; u.pitch = 1.15; u.volume = 1; if (pick) u.voice = pick;
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
+      };
+      setTimeout(speak, delay);
+    } catch (_) {}
+  }
 
   return { context, unlock, setMuted, isMuted, balloonPop, tick, whoosh, sparkle, chime, cheer, happyBirthday, startMusic, stopMusic, narrate };
 })();
@@ -154,13 +168,18 @@ $$("[data-next]").forEach((b) => b.addEventListener("click", () => { Sound.whoos
 const gate = $("#gate");
 $("#openBtn").addEventListener("click", async () => {
   Sound.unlock(); Sound.chime(); Sound.startMusic();
-  Sound.narrate("Happy birthday, Ameena! Today is all about you. Enjoy every moment.", { delay: 500 });
   const r = $("#gateGift").getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 44);
   gate.classList.add("is-gone"); progressEl.classList.add("is-on"); started = true;
   await sleep(600); gate.style.display = "none"; goTo(0);
 });
 const audioBtn = $("#audioBtn");
-audioBtn.addEventListener("click", () => { const m = !Sound.isMuted(); Sound.setMuted(m); audioBtn.classList.toggle("is-muted", m); if (!m) Sound.startMusic(); });
+audioBtn.addEventListener("click", () => {
+  const m = !Sound.isMuted(); Sound.setMuted(m); audioBtn.classList.toggle("is-muted", m);
+  const iv = $("#introVideo"), song = $("#song");
+  if (iv) iv.muted = m;
+  if (song) { song.muted = m; if (m) song.pause?.(); }
+  if (!m) Sound.startMusic();
+});
 
 /* ---------------- CHAPTER HOOKS ---------------- */
 const onEnter = {}, onLeave = {};
@@ -174,18 +193,20 @@ onEnter[0] = async () => {
   for (const n of [3, 2, 1]) { numEl.textContent = n; numEl.classList.remove("pop"); void numEl.offsetWidth; numEl.classList.add("pop"); Sound.tick(); await sleep(850); }
   numEl.textContent = ""; cd.hidden = true;                    // remove the lingering "1"
   rs.hidden = false;                                           // clip (top) + Ameena photo (#1) shown together
-  vid.play?.().catch(() => {});
+  Sound.stopMusic();                                           // let the clip's own background music play
+  vid.muted = Sound.isMuted();
+  vid.play?.().catch(() => { vid.muted = true; vid.play?.().catch(() => {}); });
   await sleep(300);
   Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.4, 70);
   await sleep(500); $("#cdNext").hidden = false;
 };
-onLeave[0] = () => { $("#introVideo").pause?.(); };
+onLeave[0] = () => { $("#introVideo").pause?.(); Sound.startMusic(); };
 
 /* CH1 — name balloon game */
 let nameBuilt = false;
 onEnter[1] = () => {
   if (nameBuilt) return; nameBuilt = true;
-  Sound.narrate("Tap the balloons to spell your name.", { delay: 300 });
+  Sound.narrate("The twenty second of September is Ameena's day.", { delay: 500 });
   const wrap = $("#balloons"), bar = $("#nameBar");
   const letters = ["A", "M", "E", "E", "N", "A"], shades = ["#ff2d78", "#ff69a8", "#ff8fc0", "#ffa9d0", "#ff5a9e", "#ff7db4"];
   let popped = 0;
@@ -233,7 +254,6 @@ function fmt(n) { if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, "") 
 let cakeReady = false;
 onEnter[7] = () => {
   if (cakeReady) return; cakeReady = true;
-  Sound.narrate("Make a wish, and blow out the candles.", { delay: 400 });
   tryThreeCake($("#cake3d"));                         // upgrade to real 3D cake if possible
   const host = $("#cake3d");
   let done = false;
@@ -247,7 +267,6 @@ onEnter[7] = () => {
     $("#cakeHint").style.display = "none"; $("#micBtn").hidden = true;
     await sleep(600);
     Sound.happyBirthday(); Sound.cheer(); FX.rain(4200, 6); FX.burst(innerWidth / 2, innerHeight * 0.35, 100);
-    Sound.narrate("May every day of yours be golden. Happy birthday, Ameena!", { delay: 900 });
     $("#wishMsg").hidden = false; $("#wishNext").hidden = false;
   };
   host.addEventListener("click", blow, { passive: true });
@@ -258,12 +277,14 @@ onEnter[7] = () => {
 /* CH8 (ch-video) — clip (loops) + Ameena's real photo (#2) together, with the birthday tune */
 let ch9Done = false;
 onEnter[8] = () => {
-  const v = $("#monthsVideo");
+  const v = $("#monthsVideo"), song = $("#song");
+  Sound.stopMusic();                                          // the singing voice is the audio here
   try { v.currentTime = 0; } catch (_) {}
-  v.play?.().catch(() => {});
-  if (!ch9Done) { ch9Done = true; Sound.happyBirthday(); FX.burst(innerWidth / 2, innerHeight * 0.4, 55); }
+  v.muted = true; v.play?.().catch(() => {});                 // clip = the visual (months + candles)
+  if (song) { song.muted = Sound.isMuted(); try { song.currentTime = 0; } catch (_) {} song.play?.().catch(() => {}); }
+  if (!ch9Done) { ch9Done = true; FX.burst(innerWidth / 2, innerHeight * 0.4, 55); }
 };
-onLeave[8] = () => { $("#monthsVideo").pause?.(); };
+onLeave[8] = () => { $("#monthsVideo").pause?.(); $("#song")?.pause?.(); Sound.startMusic(); };
 
 /* ---------------- MIC BLOW DETECTION ---------------- */
 async function startMicBlow(cb) {
