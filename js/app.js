@@ -158,7 +158,7 @@ const Bgm = (() => {
   function setMuted(m) { muted = m; if (el) el.muted = m; }
   return { start, level, setMuted };
 })();
-const DUCK_BGM = new Set(["ch-call", "ch-countdown", "ch-wish", "ch-her", "ch-video"]); // pages with their own clip / voice / ring
+const DUCK_BGM = new Set(["ch-her", "ch-video"]); // pages that carry their own continuous voice/clip audio
 
 /* floating balloons over the photo (few, gentle) */
 let herBalloonTimer = null;
@@ -194,7 +194,7 @@ $$("[data-next]").forEach((b) => b.addEventListener("click", () => { Sound.whoos
 /* ---------------- GATE ---------------- */
 const gate = $("#gate");
 $("#openBtn").addEventListener("click", async () => {
-  Sound.unlock(); Sound.chime(); Bgm.start();
+  Sound.unlock(); Sound.chime();   // piano background starts later, on the countdown page (page 3)
   const r = $("#gateGift").getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 44);
   gate.classList.add("is-gone"); progressEl.classList.add("is-on"); started = true;
   await sleep(600); gate.style.display = "none"; goTo(0);
@@ -237,11 +237,13 @@ onLeave["ch-call"] = () => { stopRing(); };
 let cdDone = false;
 onEnter["ch-countdown"] = async () => {
   if (cdDone) return; cdDone = true;
+  Bgm.start(); Bgm.level(0.34);                                // piano background begins here (page 3), during 3·2·1
   const numEl = $("#cdNum"), cd = $("#countdown"), rs = $("#revealStage"), vid = $("#introVideo");
   await sleep(350);
   for (const n of [3, 2, 1]) { numEl.textContent = n; numEl.classList.remove("pop"); void numEl.offsetWidth; numEl.classList.add("pop"); Sound.tick(); await sleep(850); }
   numEl.textContent = ""; cd.hidden = true;                    // remove the lingering "1"
   rs.hidden = false;                                           // clip (top) + Ameena photo (#1) shown together
+  Bgm.level(0.06);                                             // duck piano while the opening clip's music plays
   vid.muted = Sound.isMuted();                                 // opening clip plays its own music
   vid.play?.().catch(() => { vid.muted = true; vid.play?.().catch(() => {}); });
   await sleep(300);
