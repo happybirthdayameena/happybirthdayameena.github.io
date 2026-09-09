@@ -103,14 +103,7 @@
               <radialGradient id="br" cx="38%" cy="30%"><stop offset="0%" stop-color="#ffbcd0"/><stop offset="55%" stop-color="#ff6a97"/><stop offset="100%" stop-color="#e23a63"/></radialGradient>
               <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff6f9c"/><stop offset="48%" stop-color="#ff2d78"/><stop offset="100%" stop-color="#c11048"/></linearGradient>
             </defs>
-            <!-- each balloon tied straight down by a string to a little ring (surakh) sitting on a letter -->
-            <line x1="105" y1="92" x2="105" y2="218" stroke="#ffd6e4" stroke-width="2.2"/>
-            <line x1="210" y1="80" x2="210" y2="218" stroke="#ffd6e4" stroke-width="2.2"/>
-            <line x1="315" y1="92" x2="315" y2="218" stroke="#ffd6e4" stroke-width="2.2"/>
-            <circle cx="105" cy="220" r="6" fill="none" stroke="#fff0f6" stroke-width="2.4"/>
-            <circle cx="210" cy="220" r="6" fill="none" stroke="#fff0f6" stroke-width="2.4"/>
-            <circle cx="315" cy="220" r="6" fill="none" stroke="#fff0f6" stroke-width="2.4"/>
-            <!-- AMEENA — extruded 3D block hanging from the strings -->
+            <!-- AMEENA — extruded 3D block (drawn first; the strings, the hole in the E and the balloons sit ON TOP) -->
             <g font-family="'Playfair Display',Georgia,serif" font-weight="900" font-size="62" text-anchor="middle">
               <text x="216" y="264" fill="#5e0a20">AMEENA</text>
               <text x="215" y="263" fill="#6b0d26">AMEENA</text>
@@ -120,21 +113,32 @@
               <text x="211" y="259" fill="#ad1a44">AMEENA</text>
               <text x="210" y="258" fill="url(#face)">AMEENA</text>
             </g>
-            <!-- balloons (drawn on top) -->
+            <!-- 3 balloon strings GATHER into one knot, then a single string ties THROUGH a hole (surakh) in the E -->
+            <path d="M135,88 Q150,126 197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
+            <path d="M197,78 L197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
+            <path d="M259,88 Q244,126 197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
+            <circle cx="197" cy="163" r="3.2" fill="#fff0f6"/>                     <!-- the gather knot where all 3 meet -->
+            <line x1="197" y1="163" x2="197" y2="201" stroke="#ffdbe8" stroke-width="2.3"/>  <!-- single string down into the E -->
+            <!-- the hole punched INTO the top of the E, and the knot tied through it -->
+            <circle cx="197" cy="208" r="8.5" fill="#0c0208"/>
+            <circle cx="197" cy="208" r="8.5" fill="none" stroke="#ffe0ec" stroke-width="2.4"/>
+            <circle cx="197" cy="209" r="3" fill="#fff0f6"/>                        <!-- ganth sitting in the hole -->
+            <line x1="197" y1="212" x2="197" y2="221" stroke="#ffdbe8" stroke-width="1.9"/> <!-- little loose end -->
+            <!-- balloons (front) — fanned as one bunch above the knot -->
             <g>
-              <ellipse cx="105" cy="54" rx="30" ry="37" fill="url(#bl)"/>
-              <path d="M105,89 l-5,7 h10 z" fill="#c11c48"/>
-              <ellipse cx="95" cy="42" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
+              <ellipse cx="135" cy="52" rx="29" ry="36" fill="url(#bl)"/>
+              <path d="M135,86 l-5,7 h10 z" fill="#c11c48"/>
+              <ellipse cx="126" cy="41" rx="6.5" ry="9.5" fill="rgba(255,255,255,.5)"/>
             </g>
             <g>
-              <ellipse cx="210" cy="42" rx="32" ry="39" fill="url(#bc)"/>
-              <path d="M210,79 l-5,7 h10 z" fill="#a81640"/>
-              <ellipse cx="200" cy="30" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
+              <ellipse cx="197" cy="40" rx="31" ry="38" fill="url(#bc)"/>
+              <path d="M197,76 l-5,7 h10 z" fill="#a81640"/>
+              <ellipse cx="188" cy="29" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
             </g>
             <g>
-              <ellipse cx="315" cy="54" rx="30" ry="37" fill="url(#br)"/>
-              <path d="M315,89 l-5,7 h10 z" fill="#c92c52"/>
-              <ellipse cx="305" cy="42" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
+              <ellipse cx="259" cy="52" rx="29" ry="36" fill="url(#br)"/>
+              <path d="M259,86 l-5,7 h10 z" fill="#c92c52"/>
+              <ellipse cx="250" cy="41" rx="6.5" ry="9.5" fill="rgba(255,255,255,.5)"/>
             </g>
           </svg>
         </div>

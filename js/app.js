@@ -194,7 +194,7 @@ $$("[data-next]").forEach((b) => b.addEventListener("click", () => { Sound.whoos
 /* ---------------- GATE ---------------- */
 const gate = $("#gate");
 $("#openBtn").addEventListener("click", async () => {
-  Sound.unlock(); Sound.chime();   // piano background starts later, on the countdown page (page 3)
+  Sound.unlock(); Sound.chime();   // piano background starts later, on the name page (page 4)
   const r = $("#gateGift").getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 44);
   gate.classList.add("is-gone"); progressEl.classList.add("is-on"); started = true;
   await sleep(600); gate.style.display = "none"; goTo(0);
@@ -236,14 +236,12 @@ onLeave["ch-call"] = () => { stopRing(); };
 /* CH0 — countdown → intro video → Ameena photo + date */
 let cdDone = false;
 onEnter["ch-countdown"] = async () => {
-  if (cdDone) return; cdDone = true;
-  Bgm.start(); Bgm.level(0.34);                                // piano background begins here (page 3), during 3·2·1
+  if (cdDone) return; cdDone = true;                           // no piano here — it begins on the name page (page 4)
   const numEl = $("#cdNum"), cd = $("#countdown"), rs = $("#revealStage"), vid = $("#introVideo");
   await sleep(350);
   for (const n of [3, 2, 1]) { numEl.textContent = n; numEl.classList.remove("pop"); void numEl.offsetWidth; numEl.classList.add("pop"); Sound.tick(); await sleep(850); }
   numEl.textContent = ""; cd.hidden = true;                    // remove the lingering "1"
   rs.hidden = false;                                           // clip (top) + Ameena photo (#1) shown together
-  Bgm.level(0.06);                                             // duck piano while the opening clip's music plays
   vid.muted = Sound.isMuted();                                 // opening clip plays its own music
   vid.play?.().catch(() => { vid.muted = true; vid.play?.().catch(() => {}); });
   await sleep(300);
@@ -255,6 +253,7 @@ onLeave["ch-countdown"] = () => { $("#introVideo").pause?.(); };
 /* CH1 — name balloon game */
 let nameBuilt = false;
 onEnter["ch-name"] = () => {
+  Bgm.start(); Bgm.level(0.34);                                // piano background begins RIGHT HERE — page 4
   if (nameBuilt) return; nameBuilt = true;
   Sound.narrate("The twenty second of September is Ameena's day.", { delay: 500 });
   const wrap = $("#balloons"), bar = $("#nameBar");
