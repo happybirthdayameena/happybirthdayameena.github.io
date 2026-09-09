@@ -373,7 +373,7 @@ async function startMicBlow(cb) {
 }
 
 /* ---------------- 3D NAME (CSS default, Three.js upgrade) ---------------- */
-async function tryThreeCake(host) { if (REDUCED) return false; try { const m = await import("./cake3d.js"); await m.mountCake3D(host, "AMEENA"); return true; } catch (_) { return false; } }
+async function tryThreeCake(host) { if (REDUCED) return false; try { const m = await import("./cake3d.js?v=8"); await m.mountCake3D(host, "AMEENA"); return true; } catch (_) { return false; } }
 
 /* ---------------- END actions ---------------- */
 $("#replayBtn").addEventListener("click", () => { Sound.unlock(); location.reload(); });
