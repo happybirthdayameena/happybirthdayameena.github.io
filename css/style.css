@@ -235,8 +235,8 @@ b{font-weight:600}
 .nameArt{width:min(82vw,360px);margin:0 auto}
 .nameArt svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 10px 16px rgba(0,0,0,.4))}
 /* on open: whole thing rises from below, then settles into a gentle idle float */
-.name3d-wrap:not([hidden]) .nameArt{animation:riseFloat 1.9s cubic-bezier(.16,.8,.3,1) both, floaty 3.6s ease-in-out 2.1s infinite}
-@keyframes riseFloat{0%{transform:translateY(300px);opacity:0}18%{opacity:1}100%{transform:translateY(0);opacity:1}}
+.name3d-wrap:not([hidden]) .nameArt{animation:riseFloat 2.3s cubic-bezier(.42,0,.35,1) both, floaty 3.6s ease-in-out 2.5s infinite}
+@keyframes riseFloat{0%{transform:translateY(300px);opacity:0}25%{opacity:1}100%{transform:translateY(0);opacity:1}}
 .name3d__cap{font-family:var(--font-script);font-weight:700;font-size:1.9rem;color:var(--pink-soft);margin-top:2px}
 
 /* ---- CH3 gallery ---- */
