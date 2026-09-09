@@ -95,40 +95,49 @@
       <div class="namebar" id="nameBar" aria-hidden="true"></div>
       <div class="balloons" id="balloons"></div>
       <div class="name3d-wrap" id="name3dWrap" hidden>
-        <div class="namefly" aria-hidden="true">
-          <svg viewBox="0 0 240 212" xmlns="http://www.w3.org/2000/svg">
+        <div class="nameArt" aria-hidden="true">
+          <svg viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <radialGradient id="bl" cx="38%" cy="30%"><stop offset="0%" stop-color="#ffa9c2"/><stop offset="55%" stop-color="#ff4f82"/><stop offset="100%" stop-color="#d31f4e"/></radialGradient>
               <radialGradient id="bc" cx="38%" cy="30%"><stop offset="0%" stop-color="#ff9db4"/><stop offset="55%" stop-color="#ff2d78"/><stop offset="100%" stop-color="#c11c48"/></radialGradient>
               <radialGradient id="br" cx="38%" cy="30%"><stop offset="0%" stop-color="#ffbcd0"/><stop offset="55%" stop-color="#ff6a97"/><stop offset="100%" stop-color="#e23a63"/></radialGradient>
+              <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff6f9c"/><stop offset="48%" stop-color="#ff2d78"/><stop offset="100%" stop-color="#c11048"/></linearGradient>
             </defs>
-            <!-- strings tied from each balloon to a single knot just above the name -->
-            <path d="M62,76 Q84,116 120,146" fill="none" stroke="#ffd0e0" stroke-width="1.7"/>
-            <path d="M120,66 Q116,106 120,146" fill="none" stroke="#ffd0e0" stroke-width="1.7"/>
-            <path d="M178,76 Q156,116 120,146" fill="none" stroke="#ffd0e0" stroke-width="1.7"/>
-            <circle cx="120" cy="146" r="2.8" fill="#ffe3ee"/>
-            <!-- one main string carrying the name: knot → down onto the AMEENA text (drawn in front) -->
-            <line x1="120" y1="146" x2="120" y2="206" stroke="#ffbcd4" stroke-width="2.3"/>
-            <circle cx="120" cy="206" r="2.6" fill="#ffe3ee"/>
-            <!-- balloons -->
+            <!-- each balloon tied straight down by a string to a little ring (surakh) sitting on a letter -->
+            <line x1="105" y1="92" x2="105" y2="209" stroke="#ffd0e0" stroke-width="2"/>
+            <line x1="210" y1="80" x2="210" y2="209" stroke="#ffd0e0" stroke-width="2"/>
+            <line x1="315" y1="92" x2="315" y2="209" stroke="#ffd0e0" stroke-width="2"/>
+            <circle cx="105" cy="210" r="5.5" fill="none" stroke="#ffe3ee" stroke-width="2"/>
+            <circle cx="210" cy="210" r="5.5" fill="none" stroke="#ffe3ee" stroke-width="2"/>
+            <circle cx="315" cy="210" r="5.5" fill="none" stroke="#ffe3ee" stroke-width="2"/>
+            <!-- AMEENA — extruded 3D block hanging from the strings -->
+            <g font-family="'Playfair Display',Georgia,serif" font-weight="900" font-size="62" text-anchor="middle">
+              <text x="216" y="264" fill="#5e0a20">AMEENA</text>
+              <text x="215" y="263" fill="#6b0d26">AMEENA</text>
+              <text x="214" y="262" fill="#78102c">AMEENA</text>
+              <text x="213" y="261" fill="#881333">AMEENA</text>
+              <text x="212" y="260" fill="#99163c">AMEENA</text>
+              <text x="211" y="259" fill="#ad1a44">AMEENA</text>
+              <text x="210" y="258" fill="url(#face)">AMEENA</text>
+            </g>
+            <!-- balloons (drawn on top) -->
             <g>
-              <ellipse cx="62" cy="44" rx="25" ry="30" fill="url(#bl)"/>
-              <path d="M62,73 l-4,6 h8 z" fill="#c11c48"/>
-              <ellipse cx="54" cy="34" rx="6" ry="9" fill="rgba(255,255,255,.5)"/>
+              <ellipse cx="105" cy="54" rx="30" ry="37" fill="url(#bl)"/>
+              <path d="M105,89 l-5,7 h10 z" fill="#c11c48"/>
+              <ellipse cx="95" cy="42" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
             </g>
             <g>
-              <ellipse cx="120" cy="34" rx="26" ry="31" fill="url(#bc)"/>
-              <path d="M120,63 l-4,6 h8 z" fill="#a81640"/>
-              <ellipse cx="112" cy="23" rx="6" ry="9" fill="rgba(255,255,255,.5)"/>
+              <ellipse cx="210" cy="42" rx="32" ry="39" fill="url(#bc)"/>
+              <path d="M210,79 l-5,7 h10 z" fill="#a81640"/>
+              <ellipse cx="200" cy="30" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
             </g>
             <g>
-              <ellipse cx="178" cy="44" rx="25" ry="30" fill="url(#br)"/>
-              <path d="M178,73 l-4,6 h8 z" fill="#c92c52"/>
-              <ellipse cx="170" cy="34" rx="6" ry="9" fill="rgba(255,255,255,.5)"/>
+              <ellipse cx="315" cy="54" rx="30" ry="37" fill="url(#br)"/>
+              <path d="M315,89 l-5,7 h10 z" fill="#c92c52"/>
+              <ellipse cx="305" cy="42" rx="7" ry="10" fill="rgba(255,255,255,.5)"/>
             </g>
           </svg>
         </div>
-        <div id="name3d" class="name3d"></div>
         <p class="name3d__cap">the star of today ✨</p>
       </div>
       <button class="btn next-btn" data-next hidden id="nameNext">next <span class="btn__ico">→</span></button>

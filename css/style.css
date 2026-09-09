@@ -93,7 +93,7 @@ b{font-weight:600}
   text-align:center;gap:.7rem;padding:calc(env(safe-area-inset-top,0) + 64px) 22px calc(env(safe-area-inset-bottom,0) + 60px);
   opacity:0;pointer-events:none;overflow-y:auto;visibility:hidden;
   transition:opacity .45s var(--ease),visibility .45s}
-.chapter.is-active{opacity:1;pointer-events:auto;visibility:visible;animation-duration:.9s;animation-timing-function:var(--ease);animation-fill-mode:both}
+.chapter.is-active{opacity:1;pointer-events:auto;visibility:visible;animation-duration:1.4s;animation-timing-function:var(--ease);animation-fill-mode:both}
 .chapter.is-active>*{animation:riseIn .6s var(--ease) backwards}
 .chapter.is-active>*:nth-child(2){animation-delay:.06s}
 .chapter.is-active>*:nth-child(3){animation-delay:.12s}
@@ -151,8 +151,8 @@ b{font-weight:600}
 
 /* video clip + photo shown together */
 .media-duo{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
-.media-duo .clip{width:min(54vw,200px);aspect-ratio:9/16;max-height:32vh;border-radius:14px;overflow:hidden;border:1px solid var(--card-bd);box-shadow:var(--shadow);background:#000}
-.media-duo .clip video{width:100%;height:100%;object-fit:cover;display:block}
+.media-duo .clip{width:min(58vw,215px);aspect-ratio:9/16;max-height:40vh;border-radius:16px;overflow:hidden;border:1px solid var(--card-bd);box-shadow:var(--shadow);background:#000}
+.media-duo .clip video{width:100%;height:100%;object-fit:contain;display:block}
 .media-duo .photo{position:relative;width:min(58vw,215px);aspect-ratio:9/16;max-height:40vh;border-radius:16px;overflow:hidden;border:1px solid var(--card-bd);box-shadow:0 18px 50px rgba(255,45,120,.35)}
 .media-duo .photo img{width:100%;height:100%;object-fit:cover;display:block}
 .media-duo .photo .video-hb{font-size:1.15rem}
@@ -231,9 +231,12 @@ b{font-weight:600}
 @keyframes bpulse{0%,100%{scale:1}50%{scale:1.09}}
 
 .name3d-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem}
-.namefly{position:relative;z-index:3;width:min(58vw,215px);margin:0 auto -112px;animation:floaty 3.4s ease-in-out infinite}
-.namefly svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
-.name3d{position:relative;z-index:1;animation:floaty 3.4s ease-in-out infinite}   /* same rhythm as balloons; string sits IN FRONT (z-index) so it ties onto the name */
+/* balloons + strings + AMEENA are ONE svg, so the strings stay physically tied to the letters */
+.nameArt{width:min(82vw,360px);margin:0 auto}
+.nameArt svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 10px 16px rgba(0,0,0,.4))}
+/* on open: whole thing rises from below, then settles into a gentle idle float */
+.name3d-wrap:not([hidden]) .nameArt{animation:riseFloat .9s var(--ease) both, floaty 3.6s ease-in-out 1.1s infinite}
+@keyframes riseFloat{from{transform:translateY(120px);opacity:0}to{transform:translateY(0);opacity:1}}
 .name3d__cap{font-family:var(--font-script);font-weight:700;font-size:1.9rem;color:var(--pink-soft);margin-top:2px}
 
 /* ---- CH3 gallery ---- */

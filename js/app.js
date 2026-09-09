@@ -281,11 +281,9 @@ onEnter["ch-name"] = () => {
   async function finishName() {
     await sleep(450);
     wrap.style.display = "none"; $("#nameHint").style.display = "none"; $("#nameBar").style.display = "none";
-    const n3 = $("#name3dWrap"); n3.hidden = false;
+    $("#name3dWrap").hidden = false;                            // balloons+strings+AMEENA rise up together as one graphic
     Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.42, 80);
-    const ok = await tryThreeName($("#name3d"));                // real RED 3D name first
-    if (!ok) buildName3D($("#name3d"), "AMEENA");               // pink CSS only if WebGL is unavailable
-    await sleep(300); $("#nameNext").hidden = false;
+    await sleep(950); $("#nameNext").hidden = false;            // wait for the rise-up before showing Next
   }
 };
 
@@ -376,23 +374,6 @@ async function startMicBlow(cb) {
 }
 
 /* ---------------- 3D NAME (CSS default, Three.js upgrade) ---------------- */
-function buildName3D(host, text) {
-  host.innerHTML = "";
-  const stage = document.createElement("div"); stage.className = "n3d-stage";
-  [...text].forEach((ch, i) => { const s = document.createElement("span"); s.className = "n3d-l"; s.textContent = ch; s.style.setProperty("--i", i); stage.appendChild(s); });
-  host.appendChild(stage);
-  if (!$("#n3d-css")) {
-    const st = document.createElement("style"); st.id = "n3d-css";
-    st.textContent = `.n3d-stage{display:flex;gap:.02em;perspective:700px;justify-content:center}
-    .n3d-l{font-family:var(--font-d);font-weight:900;font-size:clamp(3rem,19vw,6.2rem);line-height:1;color:#fff;
-      text-shadow:1px 1px 0 #ff7db4,2px 2px 0 #ff5a9e,3px 3px 0 #ff3f8e,4px 4px 0 #e82e7d,6px 6px 0 #c9256b,8px 8px 16px rgba(0,0,0,.5),0 0 30px rgba(255,45,120,.6);
-      animation:n3dspin 4s ease-in-out infinite, n3dglow 2s ease-in-out infinite;animation-delay:calc(var(--i)*.09s)}
-    @keyframes n3dspin{0%,100%{transform:rotateY(-24deg) rotateX(8deg) translateY(0) scale(1)}50%{transform:rotateY(24deg) rotateX(-6deg) translateY(-12px) scale(1.06)}}
-    @keyframes n3dglow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,45,120,.4))}50%{filter:drop-shadow(0 0 18px rgba(255,45,120,.85))}}`;
-    document.head.appendChild(st);
-  }
-}
-async function tryThreeName(host) { if (REDUCED || innerWidth < 360) return false; try { const m = await import("./scene3d.js"); await m.mountName3D(host, "AMEENA"); return true; } catch (_) { return false; } }
 async function tryThreeCake(host) { if (REDUCED) return false; try { const m = await import("./cake3d.js"); await m.mountCake3D(host, "AMEENA"); return true; } catch (_) { return false; } }
 
 /* ---------------- END actions ---------------- */
