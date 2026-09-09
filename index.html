@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=8" />
+  <link rel="stylesheet" href="css/style.css?v=9" />
 
   <script type="importmap">
   { "imports": {
@@ -103,7 +103,13 @@
               <radialGradient id="br" cx="38%" cy="30%"><stop offset="0%" stop-color="#ffbcd0"/><stop offset="55%" stop-color="#ff6a97"/><stop offset="100%" stop-color="#e23a63"/></radialGradient>
               <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff6f9c"/><stop offset="48%" stop-color="#ff2d78"/><stop offset="100%" stop-color="#c11048"/></linearGradient>
             </defs>
-            <!-- AMEENA — extruded 3D block (drawn first; the strings, the hole in the E and the balloons sit ON TOP) -->
+            <!-- 3 balloon strings GATHER to one knot, then a single string runs down BEHIND the letters to the E -->
+            <path d="M135,88 Q150,126 197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
+            <path d="M197,78 L197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
+            <path d="M259,88 Q244,126 197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
+            <circle cx="197" cy="163" r="3.2" fill="#fff0f6"/>                     <!-- the gather knot where all 3 meet -->
+            <line x1="197" y1="163" x2="197" y2="206" stroke="#ffdbe8" stroke-width="2.3"/>  <!-- single string, tucks BEHIND the E -->
+            <!-- AMEENA — the SAME red 3D extruded name, drawn OVER the strings so the strings sit behind the text -->
             <g font-family="'Playfair Display',Georgia,serif" font-weight="900" font-size="62" text-anchor="middle">
               <text x="216" y="264" fill="#5e0a20">AMEENA</text>
               <text x="215" y="263" fill="#6b0d26">AMEENA</text>
@@ -113,13 +119,7 @@
               <text x="211" y="259" fill="#ad1a44">AMEENA</text>
               <text x="210" y="258" fill="url(#face)">AMEENA</text>
             </g>
-            <!-- 3 balloon strings GATHER into one knot, then a single string ties THROUGH a hole (surakh) in the E -->
-            <path d="M135,88 Q150,126 197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
-            <path d="M197,78 L197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
-            <path d="M259,88 Q244,126 197,163" fill="none" stroke="#ffdbe8" stroke-width="2"/>
-            <circle cx="197" cy="163" r="3.2" fill="#fff0f6"/>                     <!-- the gather knot where all 3 meet -->
-            <line x1="197" y1="163" x2="197" y2="201" stroke="#ffdbe8" stroke-width="2.3"/>  <!-- single string down into the E -->
-            <!-- the hole punched INTO the top of the E, and the knot tied through it -->
+            <!-- the hole punched in the E + the knot tied through it — this tie stays in FRONT, on the letter -->
             <circle cx="197" cy="208" r="8.5" fill="#0c0208"/>
             <circle cx="197" cy="208" r="8.5" fill="none" stroke="#ffe0ec" stroke-width="2.4"/>
             <circle cx="197" cy="209" r="3" fill="#fff0f6"/>                        <!-- ganth sitting in the hole -->
@@ -282,6 +282,6 @@
 
   <audio id="song" src="assets/birthday-song.mp3" preload="auto" playsinline></audio>
   <audio id="bgm" src="assets/bg-piano.mp3" preload="auto" loop playsinline></audio>
-  <script type="module" src="js/app.js?v=8"></script>
+  <script type="module" src="js/app.js?v=9"></script>
 </body>
 </html>

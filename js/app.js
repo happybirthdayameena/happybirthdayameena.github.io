@@ -282,7 +282,7 @@ onEnter["ch-name"] = () => {
     wrap.style.display = "none"; $("#nameHint").style.display = "none"; $("#nameBar").style.display = "none";
     $("#name3dWrap").hidden = false;                            // balloons+strings+AMEENA rise up together as one graphic
     Sound.cheer(); FX.burst(innerWidth / 2, innerHeight * 0.42, 80);
-    await sleep(950); $("#nameNext").hidden = false;            // wait for the rise-up before showing Next
+    await sleep(2000); $("#nameNext").hidden = false;           // wait for the slow rise-up to finish before showing Next
   }
 };
 
@@ -373,7 +373,7 @@ async function startMicBlow(cb) {
 }
 
 /* ---------------- 3D NAME (CSS default, Three.js upgrade) ---------------- */
-async function tryThreeCake(host) { if (REDUCED) return false; try { const m = await import("./cake3d.js?v=8"); await m.mountCake3D(host, "AMEENA"); return true; } catch (_) { return false; } }
+async function tryThreeCake(host) { if (REDUCED) return false; try { const m = await import("./cake3d.js?v=9"); await m.mountCake3D(host, "AMEENA"); return true; } catch (_) { return false; } }
 
 /* ---------------- END actions ---------------- */
 $("#replayBtn").addEventListener("click", () => { Sound.unlock(); location.reload(); });
