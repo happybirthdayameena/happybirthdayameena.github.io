@@ -93,7 +93,7 @@ b{font-weight:600}
   text-align:center;gap:.7rem;padding:calc(env(safe-area-inset-top,0) + 64px) 22px calc(env(safe-area-inset-bottom,0) + 60px);
   opacity:0;pointer-events:none;overflow-y:auto;visibility:hidden;
   transition:opacity .45s var(--ease),visibility .45s}
-.chapter.is-active{opacity:1;pointer-events:auto;visibility:visible;animation-duration:.72s;animation-timing-function:var(--ease);animation-fill-mode:both}
+.chapter.is-active{opacity:1;pointer-events:auto;visibility:visible;animation-duration:.9s;animation-timing-function:var(--ease);animation-fill-mode:both}
 .chapter.is-active>*{animation:riseIn .6s var(--ease) backwards}
 .chapter.is-active>*:nth-child(2){animation-delay:.06s}
 .chapter.is-active>*:nth-child(3){animation-delay:.12s}
@@ -114,13 +114,13 @@ b{font-weight:600}
 .chapter:nth-of-type(10).is-active{animation-name:eBlur}
 .chapter:nth-of-type(11).is-active{animation-name:eLeft}
 .chapter:nth-of-type(12).is-active{animation-name:eDrop}
-@keyframes eZoom{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
-@keyframes eRight{from{opacity:0;transform:translateX(56px)}to{opacity:1;transform:none}}
-@keyframes eLeft{from{opacity:0;transform:translateX(-56px)}to{opacity:1;transform:none}}
-@keyframes eUp{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
-@keyframes eFlip{from{opacity:0;transform:perspective(900px) rotateX(20deg) translateY(18px)}to{opacity:1;transform:none}}
-@keyframes eDrop{0%{opacity:0;transform:translateY(-46px)}65%{opacity:1;transform:translateY(6px)}100%{transform:none}}
-@keyframes eBlur{from{opacity:0;filter:blur(10px);transform:scale(1.04)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes eZoom{0%{opacity:0;transform:scale(.7)}70%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+@keyframes eRight{0%{opacity:0;transform:translateX(110px) rotate(3deg)}100%{opacity:1;transform:none}}
+@keyframes eLeft{0%{opacity:0;transform:translateX(-110px) rotate(-3deg)}100%{opacity:1;transform:none}}
+@keyframes eUp{0%{opacity:0;transform:translateY(90px)}100%{opacity:1;transform:none}}
+@keyframes eFlip{0%{opacity:0;transform:perspective(1000px) rotateX(45deg) translateY(30px)}100%{opacity:1;transform:none}}
+@keyframes eDrop{0%{opacity:0;transform:translateY(-90px)}55%{opacity:1;transform:translateY(16px)}75%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@keyframes eBlur{0%{opacity:0;filter:blur(16px);transform:scale(1.1)}100%{opacity:1;filter:blur(0);transform:none}}
 
 .kicker{text-transform:uppercase;letter-spacing:.4em;font-size:.62rem;color:var(--pink-soft)}
 .chapter__title{font-family:var(--font-d);font-weight:700;line-height:1.1;font-size:clamp(1.7rem,7.2vw,2.5rem);max-width:16ch}
@@ -231,9 +231,9 @@ b{font-weight:600}
 @keyframes bpulse{0%,100%{scale:1}50%{scale:1.09}}
 
 .name3d-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem}
-.namefly{width:min(58vw,215px);margin:0 auto -130px;animation:floaty 3.4s ease-in-out infinite}
-.namefly svg{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
-.name3d{animation:floaty 3.4s ease-in-out infinite}   /* same rhythm as the balloons → string never detaches */
+.namefly{position:relative;z-index:3;width:min(58vw,215px);margin:0 auto -112px;animation:floaty 3.4s ease-in-out infinite}
+.namefly svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.name3d{position:relative;z-index:1;animation:floaty 3.4s ease-in-out infinite}   /* same rhythm as balloons; string sits IN FRONT (z-index) so it ties onto the name */
 .name3d__cap{font-family:var(--font-script);font-weight:700;font-size:1.9rem;color:var(--pink-soft);margin-top:2px}
 
 /* ---- CH3 gallery ---- */
